@@ -1,0 +1,4 @@
+This is a place to put notes and thoughts for coding stuff! Wow! Hooray!
+
+Villager has a job, which is a function pointer, on update call job(params)
+Job and params updated when assigned job
