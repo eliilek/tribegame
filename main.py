@@ -1,7 +1,8 @@
 import pygame
+import cevent
 from pygame.locals import *
 
-class GameApp:
+class GameApp(CEvent):
     def __init__(self):
         self._running = True
         self._display_surf = None
@@ -12,9 +13,6 @@ class GameApp:
         self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._running = True
 
-    def on_event(self, event):
-        if event.type == pygame.QUIT:
-            self._running = False
     def on_loop(self):
         pass
     def on_render(self):
