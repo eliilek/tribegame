@@ -1,8 +1,7 @@
-class Job(Cevent):
-
-    def _init_(self, villager):
+class Job():
+    def __init__(self, villager):
         self.villager = villager
-
 
     def loop(self):
         pass
+class IdleJob(Job):
