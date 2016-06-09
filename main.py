@@ -98,3 +98,5 @@ class GameApp(CEvent):
 if __name__ == "__main__":
     mainApp = GameApp()
     mainApp.on_execute()
+    def on_exit():
+        self._running = False 
