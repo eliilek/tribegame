@@ -5,7 +5,7 @@ from pygame.locals import *
 class GameApp(CEvent):
     def __init__(self):
         self._running = True
-        self._display_surf = None
+        self.display_surf = None
         self._game_objects = []
         self.size = self.width, self.height = 640, 400
 
@@ -77,8 +77,10 @@ class GameApp(CEvent):
         for obj in _game_objects:
             obj.loop()
     def on_render(self):
+        dirty_rects = []
         for obj in _game_objects:
-            obj.render()
+            dirty_rects.append(obj.render())
+        self.display_surf.update(dirty_rects)
     def on_cleanup(self):
         pygame.quit()
 
