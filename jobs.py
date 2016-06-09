@@ -4,4 +4,6 @@ class Job():
 
     def loop(self):
         pass
+
 class IdleJob(Job):
+    pass
