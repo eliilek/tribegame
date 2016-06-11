@@ -6,7 +6,7 @@ class GameApp(CEvent):
     def __init__(self):
         self._running = True
         self.display_surf = None
-        self._game_objects = []
+        self.game = MainMenu()
         self.size = self.width, self.height = 640, 400
 
     def on_init(self):
@@ -74,12 +74,9 @@ class GameApp(CEvent):
                     self.on_minimize()
 
     def on_loop(self):
-        for obj in _game_objects:
-            obj.loop()
+        self.game.loop
     def on_render(self):
-        dirty_rects = []
-        for obj in _game_objects:
-            dirty_rects.append(obj.render())
+        dirty_rects = game.render()
         self.display_surf.update(dirty_rects)
     def on_cleanup(self):
         pygame.quit()
