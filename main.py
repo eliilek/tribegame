@@ -95,7 +95,7 @@ class GameApp(CEvent):
             self.on_render()
         self.on_cleanup()
     def on_exit():
-        self._running = False 
+        self._running = False
 
 if __name__ == "__main__":
     mainApp = GameApp()

@@ -1,7 +1,3 @@
 This is a place to put notes and thoughts for coding stuff! Wow! Hooray!
 
-Villagers have a job, which is it's own object, and we are not using function pointers because Eli is dumb
-
-Test event handling shit
-
 Figure out how to use sprites properly, dirty sprite, draw group
