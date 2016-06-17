@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 
-class GameObj:
+class GameObj(object):
     def __init__(self):
         self._visible = False
         self.display_surf = None
