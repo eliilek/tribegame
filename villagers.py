@@ -6,7 +6,7 @@ from pygame.locals import *
 class Villager(GameObj):
     @property
     def food_xp(self):
-        return _food_xp
+        return self._food_xp
     @food_xp.setter
     def food_xp(self, x):
         self._food_xp = x
@@ -17,7 +17,7 @@ class Villager(GameObj):
 
     @property
     def gather_xp(self):
-        return _gather_xp
+        return self._gather_xp
     @gather_xp.setter
     def gather_xp(self, x):
         self._gather_xp = x
@@ -28,7 +28,7 @@ class Villager(GameObj):
 
     @property
     def fight_xp(self):
-        return _fight_xp
+        return self._fight_xp
     @fight_xp.setter
     def fight_xp(self, x):
         self._fight_xp = x
@@ -39,7 +39,7 @@ class Villager(GameObj):
 
     @property
     def shaman_xp(self):
-        return _shaman_xp
+        return self._shaman_xp
     @shaman_xp.setter
     def shaman_xp(self, x):
         self._shaman_xp = x
@@ -50,7 +50,7 @@ class Villager(GameObj):
 
     @property
     def build_xp(self):
-        return _build_xp
+        return self._build_xp
     @build_xp.setter
     def build_xp(self, x):
         self._build_xp = x
@@ -61,7 +61,7 @@ class Villager(GameObj):
 
     @property
     def injury(self):
-        return _injury
+        return self._injury
     @injury.setter
     def injury(self, x):
         self._injury = x

@@ -4,10 +4,11 @@ def rand_name():
     return "Steve"
 
 class TribeGame():
-    def __init__(self, calendar, tribe_name, starting_pop, xp_per_level, size, starting_wood = 0, starting_food = 0, starting_stone = 0):
+    def __init__(self, calendar, land, tribe_name, starting_pop, xp_per_level, size, starting_wood = 0, starting_food = 0, starting_stone = 0):
         self.tribe_name = tribe_name
         self.calendar = calendar
         self.calendar.begin()
+        self.land = land
         self.xp_per_level = xp_per_level
         self.pop = []
         self.wood = starting_wood
