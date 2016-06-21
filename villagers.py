@@ -71,6 +71,7 @@ class Villager(GameObj):
             self._injury = 0
 
     def __init__(self, parent, name):
+        GameObj.__init__(self)
         self.name = name
         self._food_xp = 2 * parent.xp_per_level
         self._gather_xp = 2 * parent.xp_per_level

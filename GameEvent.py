@@ -13,15 +13,14 @@ class Calendar:
             self.turn += 1
             return self.events[self.turn-1]
 
-    def getlength(self):
+    def get_length(self):
         return len(self.events)
-
 
 class GameEvent:
     def __init__(self):
         pass
 
-    def run(self, gameobject):
+    def run(self, game_object):
         pass
 
 # test script

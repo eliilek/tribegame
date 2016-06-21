@@ -16,6 +16,7 @@ class TribeGame():
         self.ore = 0
         self.metal = 0
         self.injury_threshold = 5
+        self.healing_cap = 1
         if starting_food == 0:
             self.food = self.starting_pop * 3
         else:

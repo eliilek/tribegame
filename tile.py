@@ -1,6 +1,7 @@
 import pygame
+import copy
 
-class Tile(Object):
+class Tile(object):
     @property
     def wood(self):
         return self._wood
@@ -34,15 +35,24 @@ class Tile(Object):
         elif self._food > self.food_max:
             self._food = self.food_max
 
-    def __init__(self, image, jobs, name, wood = 0, stone = 0, food = 0, ore = 0):
+    def __init__(self, image, jobs, name, wood = 0, stone = 0, food = 0, ore = 0, buildings = []):
         self.name = name
-        self.buildings = []
+        self.buildings = buildings
+        self.image = image
         #Set it up with a surface displaying image
         self.jobs = jobs
         self._wood = self.wood_max = wood
         self._stone = self.stone_max = stone
         self._food = self.food_max = food
         self.ore = ore
+        self.reachable = False
+
+    def clone(self):
+        return Tile(copy.copy(self.image), copy.deepcopy(self.jobs), self.name, self.wood_max, self.stone_max, self.food_max, self.ore, copy.deepcopy(self.buildings))
+
+    def to_village(self, healing_cap):
+        self.name = "Village"
+        self.jobs.append(HealJob(self, healing_cap))
 
     def harvest_wood(self, amount):
         if amount > self.wood:
@@ -67,3 +77,17 @@ class Tile(Object):
             amount = self.ore
         self.ore -= amount
         return amount
+
+    def replenish(self):
+        if self.food_max > 0:
+            self.food += 8
+        if self.wood_max > 0:
+            self.wood += 8
+        if self.stone_max > 0:
+            self.stone += 8
+
+    def available_jobs(self):
+        if not self.reachable:
+            return None
+        else:
+            return self.jobs
