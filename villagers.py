@@ -1,9 +1,9 @@
-import gameobj.py
+import gameobj
 import pygame
 import random
 from pygame.locals import *
 
-class Villager(GameObj):
+class Villager(gameobj.GameObj):
     @property
     def food_xp(self):
         return self._food_xp
@@ -161,6 +161,6 @@ class Villager(GameObj):
         self.parent.remove_pop(self)
 
     def work(self):
-        if self.job = None:
+        if self.job == None:
             self.job = IdleJob(self)
         self.job.work()

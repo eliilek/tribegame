@@ -1,5 +1,6 @@
 import pygame
 import copy
+from jobs import WoodJob, FoodJob, StoneJob, HealJob
 
 class Tile(object):
     @property
@@ -35,20 +36,29 @@ class Tile(object):
         elif self._food > self.food_max:
             self._food = self.food_max
 
-    def __init__(self, image, jobs, name, wood = 0, stone = 0, food = 0, ore = 0, buildings = []):
+    def __init__(self, image, name, jobs = [], wood = 0, stone = 0, food = 0, ore = 0, buildings = []):
         self.name = name
         self.buildings = buildings
         self.image = image
-        #Set it up with a surface displaying image
         self.jobs = jobs
+        #Set it up with a surface displaying image
         self._wood = self.wood_max = wood
         self._stone = self.stone_max = stone
         self._food = self.food_max = food
         self.ore = ore
+        #TEST CODE REPLACE LATER
+        if jobs == []:
+            if self.wood_max > 0:
+                self.jobs.append(WoodJob(self, wood_min = 3, wood_max = 4))
+            if self.food_max > 0:
+                self.jobs.append(FoodJob(self, food_min = 3, food_max = 3))
+            if self.stone_max > 0:
+                self.jobs.append(StoneJob(self, stone_min = 10, stone_max = 12))
+        #END TEST CODE
         self.reachable = False
 
     def clone(self):
-        return Tile(copy.copy(self.image), copy.deepcopy(self.jobs), self.name, self.wood_max, self.stone_max, self.food_max, self.ore, copy.deepcopy(self.buildings))
+        return Tile(copy.copy(self.image), self.name, copy.deepcopy(self.jobs), self.wood_max, self.stone_max, self.food_max, self.ore, copy.deepcopy(self.buildings))
 
     def to_village(self, healing_cap):
         self.name = "Village"

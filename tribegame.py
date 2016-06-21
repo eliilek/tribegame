@@ -18,12 +18,12 @@ class TribeGame():
         self.injury_threshold = 5
         self.healing_cap = 1
         if starting_food == 0:
-            self.food = self.starting_pop * 3
+            self.food = starting_pop * 3
         else:
             self.food = self.starting_food
         self.surf = pygame.Surface(size)
         for i in range(0, starting_pop):
-            pop.append(Villager(self, rand_name())
+            pop.append(Villager(self, rand_name()))
 
     def loop(self):
         for villager in pop:
@@ -41,3 +41,15 @@ class TribeGame():
 
     def remove_pop(self, child):
         self.pop.remove(child)
+
+if __name__ == "__main__":
+    import GameEvent
+    import villagers
+    import tile
+    import tilemanager
+
+    cal = GameEvent.Calendar([None, None, None])
+    tile1 = tile.Tile(None, "Forest", wood = 50)
+    tile2 = tile.Tile(None, "Berries", food = 50)
+    tile3 = tile.Tile(None, "Mountain", stone = 50)
+    tile_man = tilemanager.TileManager(50, [tile1, tile2, tile3])
