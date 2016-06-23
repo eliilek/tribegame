@@ -1,18 +1,28 @@
 import pygame
 import cevent
+import Menu
 from pygame.locals import *
 
-class GameApp(CEvent):
+def hello_world():
+    print "Button Pressed"
+
+class GameApp(cevent.CEvent):
     def __init__(self):
         self._running = True
         self.display_surf = None
-        self.game = MainMenu()
+        self.game = None
         self.size = self.width, self.height = 640, 400
 
     def on_init(self):
         pygame.init()
         self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._running = True
+        #Test Code
+        funcs = {'Test1': hello_world,
+                 'Test2': hello_world,
+                 'Quit': self.on_exit}
+        self.game = Menu.Menu("BlackMenu.png", ['Test1', 'Test2', 'Quit'], funcs)
+        #End Test Code
 
     def on_event(self, event):
         if event.type == QUIT:
@@ -76,8 +86,8 @@ class GameApp(CEvent):
     def on_loop(self):
         self.game.loop
     def on_render(self):
-        dirty_rects = game.render()
-        self.display_surf.update(dirty_rects)
+        self.game.render()
+        pygame.display.flip()
     def on_cleanup(self):
         pygame.quit()
 
@@ -91,8 +101,13 @@ class GameApp(CEvent):
             self.on_loop()
             self.on_render()
         self.on_cleanup()
-    def on_exit():
+
+    def on_exit(self):
         self._running = False
+
+    def on_lbutton_down(self, event):
+        self.game.click(event)
+
 
 if __name__ == "__main__":
     mainApp = GameApp()
