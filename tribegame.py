@@ -11,23 +11,18 @@ class TribeGame():
         self.land = land
         self.xp_per_level = xp_per_level
         self.pop = []
-        self.wood = starting_wood
-        self.stone = starting_stone
-        self.ore = 0
-        self.metal = 0
+        self._resources = {('wood':starting_wood), ('stone':starting_stone), ('food', (starting_food if starting_food != 0 else starting_pop * 3))}
         self.injury_threshold = 5
         self.healing_cap = 1
-        if starting_food == 0:
-            self.food = starting_pop * 3
-        else:
-            self.food = self.starting_food
         self.surf = pygame.Surface(size)
+        self.menus = []
         for i in range(0, starting_pop):
             pop.append(Villager(self, rand_name()))
 
     def loop(self):
-        for villager in pop:
-            villager.loop()
+        self.land.loop()
+        for menu in self.menus:
+            menu.loop()
 
     def turn(self):
         for villager in pop:
@@ -41,6 +36,24 @@ class TribeGame():
 
     def remove_pop(self, child):
         self.pop.remove(child)
+
+    def get_resource(self, key, num):
+        if num > 0:
+            try:
+                if self._resources[key] > num:
+                    self._resources[key] -= num
+                    return num
+                else:
+                    val = self._resources[key]
+                    self._resources[key] = 0
+                    return val
+            except:
+                return 0
+        else:
+            try:
+                self._resources[key] += num
+            except:
+                self._resources[key] = num
 
 if __name__ == "__main__":
     import GameEvent

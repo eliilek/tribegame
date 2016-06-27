@@ -84,7 +84,7 @@ class GameApp(cevent.CEvent):
                     self.on_minimize()
 
     def on_loop(self):
-        self.game.loop
+        self.game.loop()
     def on_render(self):
         self.game.render()
         pygame.display.flip()
