@@ -22,7 +22,7 @@ class GatherJob(Job):
     def work(self, villager):
         gathered = tile.harvest(self.key, random.randInt(self.lower_bound, self.upper_bound))
         villager.parent.get_resource(self.key, -gathered)
-        villager.get_gather_xp()
+        villager.get_xp("gather")
         if random.randint(1, 100) <= self.injury_chance:
             villager.injury += random.randint(1, self.injury_severity)
 
@@ -36,7 +36,7 @@ class FoodJob(Job):
     def work(self, villager):
         gathered = tile.harvest_food(self.key, random.randInt(self.lower_bound, self.upper_bound))
         villager.parent.get_resource(self.key, -gathered)
-        villager.get_food_xp()
+        villager.get_xp("food")
         if random.randint(1, 100) <= self.injury_chance:
             villager.injury += random.randint(1, self.injury_severity)
 
