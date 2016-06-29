@@ -1,0 +1,5 @@
+Step 1: Figure out how to read in from a file. You're probably going to do something like "Find a '{' character, read until you find a '}' character, that's one line".
+Step 2: Become familiar with the Job and Tile classes. Make a list of what information you'd need to create a tile or a Job
+Step 3: Decide what that information should look like in the text file.
+  Example - {Name:Potato Field, Resources:[Potato:50:Replenish=10;Stone:200], Image:C:/foo/bar.png}
+  In this case, once you have your line between the {}, you'd split it up at every comma. Each thing separated by a comma should look like "Field:Value", split it at the colon and you have your things.
