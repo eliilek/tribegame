@@ -21,7 +21,7 @@ class GameApp(cevent.CEvent):
         funcs = {'Test1': hello_world,
                  'Test2': hello_world,
                  'Quit': self.on_exit}
-        self.game = Menu.Menu("BlackMenu.png", ['Test1', 'Test2', 'Quit'], funcs)
+        self.game = Menu.StringMenu("BlackMenu.png", ['Test1', 'Test2', 'Quit'], funcs)
         #End Test Code
 
     def on_event(self, event):
