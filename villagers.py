@@ -1,4 +1,3 @@
-import gameobj
 import pygame
 import random
 from pygame.locals import *
@@ -24,7 +23,7 @@ class XP(object):
         self._xp_max = 8 * xp_per_level - 1
         self._xp_per_level = xp_per_level
 
-class Villager(gameobj.GameObj):
+class Villager():
     @property
     def injury(self):
         return self._injury
@@ -36,9 +35,9 @@ class Villager(gameobj.GameObj):
         elif self._injury < 0:
             self._injury = 0
 
-    def __init__(self, parent, name):
-        GameObj.__init__(self)
+    def __init__(self, parent, name, image):
         self.name = name
+        self.image = image
         self.xp = {"food":XP(parent.xp_per_level),"gather":XP(parent.xp_per_level),"fight":XP(parent.xp_per_level), "build":XP(parent.xp_per_level)}
         self._injury = 0
         self.job = IdleJob(self)

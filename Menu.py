@@ -6,12 +6,13 @@ class MenuItem(pygame.font.Font):
         self.text = text
         self.font_size = font_size
         self.font_color = font_color
-        self.label = self.render(self.text, 1, self.font_color)
+        self.to_blit = self.render(self.text, 1, self.font_color)
         self.width = self.label.get_width()
         self.height = self.label.get_height() + padding
         self.pos_x = pos_x
         self.pos_y = pos_y
         self.position = (pos_x, pos_y)
+        self.padding = padding
 
     def set_position(self, x, y):
         self.position = (x, y)
@@ -22,10 +23,10 @@ class MenuItem(pygame.font.Font):
         if self.width > background_screen.get_width() or self.height > background_screen.get_height():
             pygame.transform.scale(background_screen, (self.width + 10, self.height + 10))
         x = (background_screen.get_width() / 2) - (self.width / 2)
-        y = (background_screen.get_height() / 2) - ((self.height - padding) / 2)
-        self.label = background_screen.blit(self.label, (x, y))
+        y = (background_screen.get_height() / 2) - ((self.height - self.padding) / 2)
+        self.to_blit = background_screen.blit(self.to_blit, (x, y))
         self.width = self.label.get_width()
-        self.height = self.label.get_height() + padding
+        self.height = self.label.get_height() + self.padding
 
     def is_mouse_over(self, (pos_x, pos_y)):
         if (pos_x >= self.pos_x and pos_x <= self.pos_x + self.width) and (pos_y >= self.pos_y and pos_y <= self.pos_y + self.height):
@@ -36,18 +37,40 @@ class MenuItem(pygame.font.Font):
         self.font_color = rgb_tuple
         self.label = self.render(self.text, 1, self.font_color)
 
-class StringMenu():
-    #Items is a list of strings to be displayed
-    #Funcs is a dictionary mapping strings to functions
-    def __init__(self, image, items, funcs, font = None, font_size = 30, font_color = (255, 255, 255), width = pygame.display.get_surface().get_width(), height = pygame.display.get_surface().get_height(), button_bg = None):
+class Menu():
+    def __init__(self, image, funcs, width = pygame.display.get_surface().get_width(), height = pygame.display.get_surface().get_height(), x_pos = 0, y_pos = 0):
         screen = pygame.image.load(image)
         self.screen = pygame.transform.scale(screen, (width, height))
         self.screen_width = self.screen.get_width()
         self.screen_height = self.screen.get_height()
-        self.items = []
-        self.font = pygame.font.SysFont(font, font_size)
-        self.font_color = font_color
         self.funcs = funcs
+        self.x_pos = x_pos
+        self.y_pos = y_pos
+
+        def render(self):
+            for item in self.items:
+                if item.is_mouse_over(pygame.mouse.get_pos()):
+                    self.mouse_over(item)
+                else:
+                    self.mouse_not_over(item)
+                self.screen.blit(item.to_blit, item.position)
+            pygame.display.get_surface().blit(self.screen, (self.x_pos, self.y_pos))
+
+        def click(self, event):
+            pass
+
+        def mouse_over(self, item):
+            pass
+
+        def mouse_not_over(self, item):
+            pass
+
+class StringMenu(Menu):
+    #Items is a list of strings to be displayed
+    #Funcs is a dictionary mapping strings to functions
+    def __init__(self, image, items, funcs, font = None, font_size = 30, font_color = (255, 255, 255), width = pygame.display.get_surface().get_width(), height = pygame.display.get_surface().get_height(), button_bg = None, x_pos = 0, y_pos = 0):
+        Menu.__init__(self, image, funcs, width, height, x_pos, y_pos)
+        self.items = []
         for index, item in enumerate(items):
             menu_item = MenuItem(item, padding = 10)
             if button_bg:
@@ -58,14 +81,11 @@ class StringMenu():
             menu_item.set_position(pos_x, pos_y)
             self.items.append(menu_item)
 
-    def render(self):
-        for item in self.items:
-            if item.is_mouse_over(pygame.mouse.get_pos()):
-                item.set_font_color((34, 255, 17))
-            else:
-                item.set_font_color((255, 255, 255))
-            self.screen.blit(item.label, item.position)
-        pygame.display.get_surface().blit(self.screen, (0, 0))
+    def mouse_over(self, item):
+        item.set_font_color((34, 255, 17))
+
+    def mouse_not_over(self, item):
+        item.set_font_color((255, 255, 255))
 
     def click(self, event):
         mpos = event.pos
