@@ -2,23 +2,38 @@ import pygame
 import copy
 from jobs import WoodJob, FoodJob, StoneJob, HealJob
 
+class Building(object):
+    def __init__(self, image, name, jobs = []):
+        self.image = pygame.image.load(image).convert()
+        self.name = name
+        self.jobs = jobs
+
 class Tile(object):
-    def __init__(self, image, name, jobs = [], resources = {}, buildings = []):
+    def __init__(self, image, name, jobs = [], resources = {}, buildings = [], x = 0, y = 0):
         self.name = name
         self.buildings = buildings
-        self.image = image
         self.jobs = jobs
-        #Set it up with a surface displaying image
+        self.image = pygame.image.load(image).convert()
         self._resources = resources
         self.reachable = False
+        self.x = x
+        self.y = y
 
-    def clone(self):
-        return Tile(copy.copy(self.image), self.name, copy.deepcopy(self.jobs), copy.deepcopy(self.resources), copy.deepcopy(self.buildings))
+    def clone(self, x = 0, y = 0):
+        return Tile(copy.copy(self.image), self.name, copy.deepcopy(self.jobs), copy.deepcopy(self.resources), copy.deepcopy(self.buildings), x, y)
 
     #Clone first
     def to_village(self, healing_cap):
         self.name = "Village"
         self.jobs.append(HealJob(self, healing_cap))
+
+    def build(self, building):
+        ###Should remove the job to build this building
+        self.buildings.append(building)
+        for job in building.jobs:
+            new_job = copy.deepcopy(job)
+            new_job.tile = self
+            self.jobs.append(new_job)
 
     def harvest(self, key, num):
         try:
@@ -47,3 +62,6 @@ class Tile(object):
             return None
         else:
             return self.jobs
+
+    def render(self, screen, x, y):
+        screen.blit(self.image, (x, y))

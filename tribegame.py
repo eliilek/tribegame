@@ -32,7 +32,7 @@ class TribeGame():
             event.run(self)
 
     def render(self):
-        pass
+        self.land.render()
 
     def remove_pop(self, child):
         self.pop.remove(child)
