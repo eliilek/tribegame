@@ -108,6 +108,13 @@ class GameApp(cevent.CEvent):
     def on_lbutton_down(self, event):
         self.game.click(event)
 
+    def on_key_down(self, event):
+        if event.key in (K_LEFT, K_RIGHT, K_UP, K_DOWN) and self.game.isinstance(TribeGame):
+            self.game.key_down(event.key)
+
+    def on_key_up(self, event):
+        if event.key in (K_LEFT, K_RIGHT, K_UP, K_DOWN) and self.game.isinstance(TribeGame):
+            self.game.key_up(event.key)
 
 if __name__ == "__main__":
     mainApp = GameApp()
