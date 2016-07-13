@@ -46,6 +46,8 @@ class MenuItem(pygame.font.Font):
         self.label = self.render(self.text, 1, self.font_color)
 
 class Menu():
+    #image is the path
+
     def __init__(self, image, funcs, width = pygame.display.get_surface().get_width(), height = pygame.display.get_surface().get_height(), x_pos = 0, y_pos = 0, horizontal):
         screen = pygame.image.load(image)
         self.screen = pygame.transform.scale(screen, (width, height))
@@ -56,14 +58,14 @@ class Menu():
         self.y_pos = y_pos
         self.horizontal = horizontal
 
-        def render(self):
+        def render(self, screen):
             for item in self.items:
                 if item.is_mouse_over(pygame.mouse.get_pos()):
                     self.mouse_over(item)
                 else:
                     self.mouse_not_over(item)
                 self.screen.blit(item.to_blit, item.position)
-            pygame.display.get_surface().blit(self.screen, (self.x_pos, self.y_pos))
+            screen.blit(self.screen, (self.x_pos, self.y_pos))
 
         def click(self, event):
             pass
@@ -76,7 +78,8 @@ class Menu():
 
 class StringMenu(Menu):
     #Items is a list of strings to be displayed
-    #Funcs is a dictionary mapping strings to functions
+    #Funcs is a dictionary mapping strings to tuples of format (function, arg, arg, arg)
+    #Funcs requiring args must unpack args from tuple
 
     def __init__(self, image, items, funcs, font = None, font_size = 30, font_color = (255, 255, 255), width = pygame.display.get_surface().get_width(), height = pygame.display.get_surface().get_height(), button_bg = None, x_pos = 0, y_pos = 0, horizontal = False):
         Menu.__init__(self, image, funcs, width, height, x_pos, y_pos, horizontal)
@@ -113,16 +116,19 @@ class StringMenu(Menu):
         mpos = event.pos
         for item in self.items:
             if item.is_mouse_over(mpos):
-                self.funcs[item.text]()
+                if len(funcs[item.text]) == 1:
+                    self.funcs[item.text][0]()
+                else:
+                    self.funcs[item.text][0](self.funcs[item.text][1:])
 
     def loop(self):
         pass
 
-class ObjectMenu(Menu):
+#class ObjectMenu(Menu):
     #Items is a list of Objects with image attributes
     #Funcs is a dictionary mapping Objects to functions
 
-    def __init__(self, image, items, funcs, width = pygame.display.get_surface().get_width(), height = pygame.display.get_surface().get_height(), x_pos = 0, y_pos = 0, horizontal = False):
-        Menu.__init__(self, image, funcs, width, height, x_pos, y_pos, horizontal)
-        self.items = []
-        for index, item in enumerate(items):
+    #def __init__(self, image, items, funcs, width = pygame.display.get_surface().get_width(), height = pygame.display.get_surface().get_height(), x_pos = 0, y_pos = 0, horizontal = False):
+        #Menu.__init__(self, image, funcs, width, height, x_pos, y_pos, horizontal)
+        #self.items = []
+        #for index, item in enumerate(items):

@@ -61,7 +61,7 @@ class TribeGame(object):
         mpos = event.pos
         #Check which frame the click is in, pass to appropriate menu
         ###More logic here to check other menus###
-        self.land.click((mpos[0] - self.land_x, mpos[1] - self.land_y))
+        self.land.click((mpos[0] - self.land_x, mpos[1] - self.land))
 
     def key_down(self, key):
         self.land.key_down(key)

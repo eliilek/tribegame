@@ -1,10 +1,12 @@
 import random
 
 class Job():
-    def __init__(self, tile, injury_chance = 0, injury_severity = 1):
+    def __init__(self, name, tile, injury_chance = 0, injury_severity = 1):
         self.tile = tile
         self.injury_chance = injury_chance
         self.injury_severity = injury_severity
+        self.name = name
+        self.working_villagers = []
 
     def work(self):
         pass
@@ -13,8 +15,8 @@ class IdleJob(Job):
     pass
 
 class GatherJob(Job):
-    def __init__(self, key, tile, lower_bound, upper_bound, injury_chance = 0, injury_severity = 1):
-        Job.__init__(self, tile, injury_chance, injury_severity)
+    def __init__(self, name, key, tile, lower_bound, upper_bound, injury_chance = 0, injury_severity = 1):
+        Job.__init__(self, name, tile, injury_chance, injury_severity)
         self.key = key
         self.lower_bound = lower_bound
         self.upper_bound = upper_bound
@@ -27,8 +29,8 @@ class GatherJob(Job):
             villager.injury += random.randint(1, self.injury_severity)
 
 class FoodJob(Job):
-    def __init__(self, key, tile, lower_bound, upper_bound, injury_chance = 0, injury_severity = 1):
-        Job.__init__(self, tile, injury_chance, injury_severity)
+    def __init__(self, name, key, tile, lower_bound, upper_bound, injury_chance = 0, injury_severity = 1):
+        Job.__init__(self, name, tile, injury_chance, injury_severity)
         self.key = key
         self.lower_bound = lower_bound
         self.upper_bound = upper_bound
@@ -41,8 +43,8 @@ class FoodJob(Job):
             villager.injury += random.randint(1, self.injury_severity)
 
 class HealJob(Job):
-    def __init__(self, tile, healing_cap):
-        Job.__init__(self, tile)
+    def __init__(self, name, tile, healing_cap):
+        Job.__init__(self, name, tile)
         self.healing_cap = healing_cap
 
     def work(self, villager):

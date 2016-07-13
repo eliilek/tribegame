@@ -1,6 +1,8 @@
 import pygame
 import random
+import Menu
 from pygame.locals import *
+from GameResources import *
 
 class TileManager(object):
     def __init__(self, size, tiles, camera_width, camera_height):
@@ -22,15 +24,19 @@ class TileManager(object):
         for i in range(len(self.tiles)):
             for j in range(len(self.tiles)):
                 self.tiles[i][j].render(self.background_screen, i * self.tile_size.width, j * self.tile_size.height)
-        self.renderable_screen = self.background_screen.copy()
-        self.open_menus = []
+        self.open_menu = None
         self.scrolling = []
 
     def render(self, screen, x=0, y=0):
         if len(self.scrolling) != 0:
             for direction in self.scrolling:
                 self.scroll(direction)
-        screen.blit(self.renderable_screen, (x, y), Rect((self.camera_x, self.camera_y), (self.camera_width, self.camera_height)))
+        renderable_screen = self.background_screen.copy()
+        if self.open_menu != None:
+            self.open_menu.render(renderable_screen)
+        ###For each tile within the camera, render buildings for that tile.
+        ###Also render mobile objects like herds once that's sorted.
+        screen.blit(renderable_screen, (x, y), Rect((self.camera_x, self.camera_y), (self.camera_width, self.camera_height)))
 
     def click(self, mpos):
         for menu in open_menus:
@@ -41,8 +47,17 @@ class TileManager(object):
             tile_x = (mpos[0] + self.camera_x)/self.tile_size.width
             tile_y = (mpos[1] + self.camera_y)/self.tile_size.height
             clicked_tile = self.tiles[tile_x, tile_y]
-            ###Display jobs menu from clicked_tile.available_jobs
-            ###Account for None jobs
+            jobs = clicked_tile.available_jobs()
+            job_names = [clicked_tile.name]
+            functions = {clicked_title.name: None}
+            for job in jobs:
+                job_names.append(job.name)
+                functions[job.name] = (self.jobs_to_villagers, job)
+            self.open_menu = Menu.StringMenu(MENU_BACKGROUND, job_names, functions, MENU_FONT, MENU_FONT_SIZE, MENU_FONT_COLOR, TILE_MENU_WIDTH, TILE_MENU_HEIGHT, TILE_MENU_BG, mpos[0], mpos[1])
+
+    def jobs_to_villagers(self, args):
+        job = args[0]
+        ###Removes the menu in question, replacing it with TBD
 
     def key_down(self, key):
         if key == K_UP:

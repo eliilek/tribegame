@@ -63,4 +63,4 @@ class Villager():
     def work(self):
         if self.job == None:
             self.job = IdleJob(self)
-        self.job.work()
+        self.job.work(self)
