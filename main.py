@@ -17,6 +17,8 @@ class GameApp(cevent.CEvent):
         pygame.init()
         self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._running = True
+        #Pre-loading goes here!
+        #Perhaps a loading screen sometime down the line?
         #Test Code
         funcs = {'Test1': hello_world,
                  'Test2': hello_world,

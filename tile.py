@@ -2,12 +2,6 @@ import pygame
 import copy
 from jobs import WoodJob, FoodJob, StoneJob, HealJob
 
-class Building(object):
-    def __init__(self, image, name, jobs = []):
-        self.image = pygame.image.load(image).convert()
-        self.name = name
-        self.jobs = jobs
-
 class Tile(object):
     def __init__(self, image, name, jobs = [], resources = {}, buildings = [], x = 0, y = 0):
         self.name = name
@@ -22,18 +16,32 @@ class Tile(object):
     def clone(self, x = 0, y = 0):
         return Tile(copy.copy(self.image), self.name, copy.deepcopy(self.jobs), copy.deepcopy(self.resources), copy.deepcopy(self.buildings), x, y)
 
+    def can_build(self, building):
+        if building.unique and (building.name in (building.name for building in buildings)):
+            return False
+        return building.requirements(tile)
+
+    def has_resource(self, key):
+        try:
+            self._resources[key]
+            return True
+        except:
+            return False
+
+    def increase_regen(self, key, val):
+        try:
+            if len(self._resources[key]) >= 3:
+                self._resources[key][2] += val
+            else:
+                self._resources[key] += (val, )
+
     #Clone first
     def to_village(self, healing_cap):
         self.name = "Village"
         self.jobs.append(HealJob(self, healing_cap))
 
     def build(self, building):
-        ###Should remove the job to build this building
         self.buildings.append(building)
-        for job in building.jobs:
-            new_job = copy.deepcopy(job)
-            new_job.tile = self
-            self.jobs.append(new_job)
 
     def harvest(self, key, num):
         try:

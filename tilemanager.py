@@ -5,8 +5,10 @@ from pygame.locals import *
 from GameResources import *
 
 class TileManager(object):
-    def __init__(self, size, tiles, camera_width, camera_height):
+    def __init__(self, size, tiles, buildings, camera_width, camera_height, parent = None):
         self.progenitor_tiles = tiles
+        self.parent = parent
+        self.buildings = buildings
         self.camera_width = camera_width
         self.camera_height = camera_height
         self.tile_size = tiles[0].image.get_rect()
@@ -46,13 +48,16 @@ class TileManager(object):
         else:
             tile_x = (mpos[0] + self.camera_x)/self.tile_size.width
             tile_y = (mpos[1] + self.camera_y)/self.tile_size.height
-            clicked_tile = self.tiles[tile_x, tile_y]
+            clicked_tile = self.tiles[tile_x][tile_y]
             jobs = clicked_tile.available_jobs()
             job_names = [clicked_tile.name]
             functions = {clicked_title.name: None}
             for job in jobs:
                 job_names.append(job.name)
-                functions[job.name] = (self.jobs_to_villagers, job)
+                try:
+                    functions[job.name] = (job.secondary_menu, self, clicked_tile, parent)
+                except:
+                    functions[job.name] = (self.jobs_to_villagers, job)
             self.open_menu = Menu.StringMenu(MENU_BACKGROUND, job_names, functions, MENU_FONT, MENU_FONT_SIZE, MENU_FONT_COLOR, TILE_MENU_WIDTH, TILE_MENU_HEIGHT, TILE_MENU_BG, mpos[0], mpos[1])
 
     def jobs_to_villagers(self, args):

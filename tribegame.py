@@ -4,14 +4,16 @@ def rand_name():
     return "Steve"
 
 class TribeGame(object):
-    def __init__(self, calendar, land, tribe_name, starting_pop, xp_per_level, size, starting_wood = -1, starting_food = 0, starting_stone = 0):
+    def __init__(self, calendar, land, tribe_name, starting_pop, xp_per_level, size, starting_food = -1, starting_wood = 0, starting_stone = 0):
         self.tribe_name = tribe_name
         self.calendar = calendar
         self.calendar.begin()
         self.land = land
+
         ###Change these to be the corner within the side menus
         self.land_x = 0
         self.land_y = 0
+
         self.xp_per_level = xp_per_level
         self.pop = []
         self._resources = {'wood':starting_wood, 'stone':starting_stone, 'food':(starting_food if starting_food != -1 else starting_pop * 6))}
@@ -68,6 +70,15 @@ class TribeGame(object):
 
     def key_up(self, key):
         self.land.key_up(key)
+
+    def enough_resources(self, required):
+        try:
+            for key, val in required:
+                if self._resources[key] < val:
+                    return False
+            return True
+        except:
+            return False
 
 if __name__ == "__main__":
     import GameEvent
