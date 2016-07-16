@@ -10,7 +10,7 @@ def readfile(file_path):
             tile = json.loads(line)
             jobs = parseobjs('jobs', tile['jobs'])
             tile['jobs'] = jobs
-            buildings = parseobjs('tile', tile['buildings'])
+            buildings = parseobjs('Building', tile['buildings'])
             tile['buildings'] = buildings
             tiles.append(Tile(**tile))
     return tiles

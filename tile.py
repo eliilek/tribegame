@@ -1,6 +1,5 @@
 import pygame
 import copy
-from jobs import WoodJob, FoodJob, StoneJob, HealJob
 
 class Tile(object):
     def __init__(self, image, name, jobs = [], resources = {}, buildings = [], x = 0, y = 0):
@@ -34,6 +33,8 @@ class Tile(object):
                 self._resources[key][2] += val
             else:
                 self._resources[key] += (val, )
+        except:
+            pass
 
     #Clone first
     def to_village(self, healing_cap):
