@@ -2,7 +2,7 @@ import pygame
 from GameResources import *
 
 class MenuItem(pygame.font.Font):
-    def __init__(self, text, font = None, font_size = 30, font_color = (255, 255, 255), (pos_x, pos_y) = (0, 0), padding = 0, horizontal = False):
+    def __init__(self, text, font = MENU_FONT, font_size = MENU_FONT_SIZE, font_color = MENU_FONT_COLOR, (pos_x, pos_y) = (0, 0), padding = 0, horizontal = False):
         pygame.font.Font.__init__(self, font, font_size)
         self.text = text
         self.font_size = font_size
