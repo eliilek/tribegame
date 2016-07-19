@@ -1,3 +1,13 @@
-This is a place to put notes and thoughts for coding stuff! Wow! Hooray!
-
-Figure out how to use sprites properly, dirty sprite, draw group
+Event 1: "Injury goes bad"
+Requires a wounded villager
+Option 1: Give them the best treatment possible
+-x food, 10% chance villager dies
+Option 2: Let the spirits heal him
++x culture, 50% chance villager dies
+Event 2: Encroaching wild animals
+Option 1: Ignore them
+-x food
+Option 2: Scare them off
+20% chance villager becomes wounded
+Option 3: Kill and eat them!
+60% chance villager becomes wounded, +x food

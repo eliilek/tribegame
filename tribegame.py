@@ -9,6 +9,7 @@ class TribeGame(object):
         self.calendar = calendar
         self.calendar.begin()
         self.land = land
+        self.event = None
 
         ###Change these to be the corner within the side menus
         self.land_x = 0
@@ -20,6 +21,7 @@ class TribeGame(object):
         self.injury_threshold = 5
         self.healing_cap = 1
         self.surf = pygame.Surface(size)
+        ###Render sidebar menus onto surf here
         for i in range(0, starting_pop):
             pop.append(Villager(self, rand_name()))
 
@@ -37,6 +39,8 @@ class TribeGame(object):
 
     def render(self):
         self.land.render(self.surf, self.land_x, self.land_y)
+        if self.event != None:
+            self.surf.blit(self.event.surface, (self.event.x_pos, self.event.y_pos))
 
     def remove_pop(self, child):
         self.pop.remove(child)
@@ -63,7 +67,11 @@ class TribeGame(object):
         mpos = event.pos
         #Check which frame the click is in, pass to appropriate menu
         ###More logic here to check other menus###
-        self.land.click((mpos[0] - self.land_x, mpos[1] - self.land))
+        if self.event != None:
+            if self.event.menu.is_my_click(mpos):
+                self.event.menu.click(mpos)
+        else:
+            self.land.click((mpos[0] - self.land_x, mpos[1] - self.land_y))
 
     def key_down(self, key):
         self.land.key_down(key)

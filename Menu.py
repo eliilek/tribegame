@@ -75,13 +75,26 @@ class Menu():
             screen.blit(self.screen, (self.x_pos, self.y_pos))
 
         def click(self, event):
-            pass
+            mpos = event.pos
+            for item in self.items:
+                if item.is_mouse_over(mpos):
+                    if len(funcs[item.text]) == 1:
+                        self.funcs[item.text][0]()
+                    else:
+                        self.funcs[item.text][0](self.funcs[item.text][1:])
 
         def mouse_over(self, item):
             pass
 
         def mouse_not_over(self, item):
             pass
+
+        def is_my_click(self, mpos):
+            pos_x = mpos[0]
+            pos_y = mpos[1]
+            if (pos_x >= self.x_pos and pos_x <= self.x_pos + self.screen_width) and (pos_y >= self.y_pos and pos_y <= self.y_pos + self.screen_height):
+                return True
+            return False
 
 class StringMenu(Menu):
     #Items is a list of strings to be displayed
@@ -106,27 +119,11 @@ class StringMenu(Menu):
             menu_item.set_position(pos_x, pos_y)
             self.items.append(menu_item)
 
-    def is_my_click(self, mpos):
-        pos_x = mpos[0]
-        pos_y = mpos[1]
-        if (pos_x >= self.x_pos and pos_x <= self.x_pos + self.screen_width) and (pos_y >= self.y_pos and pos_y <= self.y_pos + self.screen_height):
-            return True
-        return False
-
     def mouse_over(self, item):
         item.set_font_color(MENU_HIGHLIGHT_COLOR)
 
     def mouse_not_over(self, item):
         item.set_font_color(MENU_FONT_COLOR)
-
-    def click(self, event):
-        mpos = event.pos
-        for item in self.items:
-            if item.is_mouse_over(mpos):
-                if len(funcs[item.text]) == 1:
-                    self.funcs[item.text][0]()
-                else:
-                    self.funcs[item.text][0](self.funcs[item.text][1:])
 
     def loop(self):
         pass
@@ -213,27 +210,11 @@ class VillagerJobMenu(Menu):
             menu_item.set_position(pos_x, pos_y)
             self.items.append(menu_item)
 
-    def is_my_click(self, mpos):
-        pos_x = mpos[0]
-        pos_y = mpos[1]
-        if (pos_x >= self.x_pos and pos_x <= self.x_pos + self.screen_width) and (pos_y >= self.y_pos and pos_y <= self.y_pos + self.screen_height):
-            return True
-        return False
-
     def mouse_over(self, item):
         item.set_font_color(MENU_HIGHLIGHT_COLOR)
 
     def mouse_not_over(self, item):
         item.set_font_color(MENU_FONT_COLOR)
-
-    def click(self, event):
-        mpos = event.pos
-        for item in self.items:
-            if item.is_mouse_over(mpos):
-                if len(funcs[item.villager]) == 1:
-                    self.funcs[item.text][0]()
-                else:
-                    self.funcs[item.text][0](self.funcs[item.text][1:])
 
     def loop(self):
         #Animate villager images if animated
