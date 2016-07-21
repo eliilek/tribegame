@@ -1,4 +1,5 @@
 import pygame
+import jobs
 
 def rand_name():
     return "Steve"
@@ -87,6 +88,13 @@ class TribeGame(object):
             return True
         except:
             return False
+
+    def available_villagers(self):
+        free = []
+        for villager in pop:
+            if isinstance(villager.job, jobs.IdleJob):
+                free.append(villager)
+        return free
 
 if __name__ == "__main__":
     import GameEvent

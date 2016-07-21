@@ -219,3 +219,12 @@ class VillagerJobMenu(Menu):
     def loop(self):
         #Animate villager images if animated
         pass
+
+    def click(self, event):
+        mpos = event.pos
+        for item in self.items:
+            if item.is_mouse_over(mpos):
+                if len(funcs[item.villager]) == 1:
+                    self.funcs[item.villager][0]()
+                else:
+                    self.funcs[item.villager][0](self.funcs[item.villager][1:])

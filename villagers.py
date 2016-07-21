@@ -60,6 +60,12 @@ class Villager(object):
     def kill(self):
         self.parent.remove_pop(self)
 
+    #Arg[0] is job to assign, Arg[1] is pass-through function
+    def assign_job(self, args):
+        self.job = args[0]
+        if len(args) > 1:
+            args[1]()
+
     def work(self):
         if self.job == None:
             self.job = IdleJob(self)

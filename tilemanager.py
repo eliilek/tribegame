@@ -1,6 +1,7 @@
 import pygame
 import random
 import Menu
+import jobs
 from pygame.locals import *
 from GameResources import *
 
@@ -41,10 +42,8 @@ class TileManager(object):
         screen.blit(renderable_screen, (x, y), Rect((self.camera_x, self.camera_y), (self.camera_width, self.camera_height)))
 
     def click(self, mpos):
-        for menu in open_menus:
-            if menu.is_my_click(mpos):
-                menu.click(mpos)
-                break
+        if self.open_menu != None and self.open_menu.is_my_click(mpos):
+            self.open_menu.click(mpos)
         else:
             tile_x = (mpos[0] + self.camera_x)/self.tile_size.width
             tile_y = (mpos[1] + self.camera_y)/self.tile_size.height
@@ -62,7 +61,14 @@ class TileManager(object):
 
     def jobs_to_villagers(self, args):
         job = args[0]
-        ###Removes the menu in question, replacing it with TBD
+        villagers = self.parent.available_villagers()
+        funcs = {}
+        for villager in villagers:
+            funcs[villager] = (villager.assign_job, job, self.clear_menu)
+        self.open_menu = Menu.VillagerJobMenu(MENU_BACKGROUND, villagers, funcs, job.xp_type, TILE_MENU_WIDTH, TILE_MENU_HEIGHT, TILE_MENU_BG, self.open_menu.pos_x, self.open_menu.pos_y)
+
+    def clear_menu(self):
+        self.open_menu = None
 
     def key_down(self, key):
         if key == K_UP:

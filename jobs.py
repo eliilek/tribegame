@@ -9,6 +9,7 @@ class Job():
         self.injury_severity = injury_severity
         self.name = name
         self.working_villagers = []
+        self.xp_type = None
 
     def work(self):
         pass
