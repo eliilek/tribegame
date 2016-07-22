@@ -27,6 +27,17 @@ class Tile(object):
         except:
             return False
 
+    def increase_multiplier(self, key, val):
+        try:
+            if len(self._resources[key]) >= 4:
+                self._resources[key][3] += val
+            elif len(self._resources[key]) >= 3:
+                self._resources[key] += (1 + val, )
+            else:
+                self._resources[key] += (0, 1 + val)
+        except:
+            pass
+
     def increase_regen(self, key, val):
         try:
             if len(self._resources[key]) >= 3:
@@ -40,28 +51,31 @@ class Tile(object):
     def to_village(self, healing_cap):
         self.name = "Village"
         self.jobs.append(HealJob(self, healing_cap))
+        ###Add procreation job
 
     def build(self, building):
         self.buildings.append(building)
+        self.jobs.append(building.construction_job)
 
     def harvest(self, key, num):
         try:
             if self._resources[key][0] > num:
                 self._resources[key][0] -= num
-                return num
+                if len(self._resources[key]) >= 4:
+                    num *= self._resources[key][3]
+                return int(num + 0.5)
             else:
                 val = self._resources[key][0]
                 self._resources[key][0] = 0
+                if len(self._resources[key]) >= 4:
+                    val *= self._resources[key][3]
                 return val
         except:
             return 0
 
     def replenish(self):
         for key, tup in resources:
-            if len(tup) == 2:
-                tup[0] += 8
-                if tup[0] > tup[1]: tup[0] = tup[1]
-            elif len(tup) >= 3:
+            if len(tup) >= 3:
                 tup[0] += tup[2]
                 if tup[0] > tup[1]: tup[0] = tup[1]
 
@@ -71,6 +85,10 @@ class Tile(object):
             return None
         else:
             return self.jobs
+
+    def remove_job(self, job):
+        if job in self.jobs:
+            self.jobs.remove(job)
 
     def render(self, screen, x, y):
         screen.blit(self.image, (x, y))

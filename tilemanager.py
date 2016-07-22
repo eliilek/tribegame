@@ -63,6 +63,7 @@ class TileManager(object):
         job = args[0]
         villagers = self.parent.available_villagers()
         funcs = {}
+        job.tile.jobs.append(job)
         for villager in villagers:
             funcs[villager] = (villager.assign_job, job, self.clear_menu)
         self.open_menu = Menu.VillagerJobMenu(MENU_BACKGROUND, villagers, funcs, job.xp_type, TILE_MENU_WIDTH, TILE_MENU_HEIGHT, TILE_MENU_BG, self.open_menu.pos_x, self.open_menu.pos_y)

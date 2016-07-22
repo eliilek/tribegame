@@ -92,7 +92,7 @@ class TribeGame(object):
     def available_villagers(self):
         free = []
         for villager in pop:
-            if isinstance(villager.job, jobs.IdleJob):
+            if villager.job == None or isinstance(villager.job, jobs.IdleJob):
                 free.append(villager)
         return free
 

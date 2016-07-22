@@ -31,6 +31,7 @@ class GatherJob(Job):
         villager.get_xp(self.xp_type)
         if random.randint(1, 100) <= self.injury_chance:
             villager.injury += random.randint(1, self.injury_severity)
+        villager.job = None
 
 class HealJob(Job):
     def __init__(self, name, tile, healing_cap):
@@ -39,11 +40,17 @@ class HealJob(Job):
 
     def work(self, villager):
         villager.injury -= random.randint(1, self.healing_cap)
+        if villager.injury = 0:
+            villager.job = None
 
 class ConstructionJob(Job):
     def __init__(self, name, tile, building):
         Job.__init__(self, name, tile)
-        self.building = copy.deepcopy(building)
+        self.xp_type = "build"
+        if building.completion >= building.completion_progress:
+            self.building = copy.deepcopy(building)
+        else:
+            self.building = building
         self.building.tile = tile
         self.building.completion = 0
 
@@ -53,6 +60,9 @@ class ConstructionJob(Job):
         self.building.progress += 10
         if self.building.completion >= self.building.completion_progress:
             self.building.on_completion()
+            villager.job = None
+            self.tile.remove_job(self)
+        villager.get_xp(self.xp_type)
         if random.randint(1, 100) <= self.injury_chance:
             villager.injury += random.randint(1, self.injury_severity)
 

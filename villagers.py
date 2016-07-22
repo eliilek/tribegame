@@ -44,6 +44,8 @@ class Villager(object):
         self.parent = parent
 
     def get_xp(self, key):
+        if key == None:
+            return None
         xp = 1
         if random.randint(1, 100) <= self.parent.double_xp_chance:  xp += 1
         try:

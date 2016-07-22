@@ -9,6 +9,7 @@ class Building(object):
         self.progress = 0
         self.completion_progress = completion_progress
         self.unique = unique
+        self.construction_job =
 
     def requirements(self, tile):
         pass
@@ -31,3 +32,16 @@ class Farm(Building):
 
     def costs(self):
         return {"wood":20, "food": 10}
+
+class Quarry(Building):
+    def __init__(self, name, image, completion_progress):
+        Building.__init__(name, image, completion_progress)
+
+    def requirements(self, tile):
+        return tile.has_resource("stone")
+
+    def on_completion(self):
+        self.tile.increase_multiplier(0.1)
+
+    def costs(self):
+        return {"wood":20, "stone": 10}
