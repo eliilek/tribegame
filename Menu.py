@@ -1,5 +1,28 @@
 import pygame
+import TextWrapping
 from GameResources import *
+
+class Alert(pygame.font.Font):
+    def __init__(self, text, background = MENU_BACKGROUND, font = MENU_FONT, font_size = MENU_FONT_SIZE, font_color = MENU_FONT_COLOR, (pos_x, pos_y) = ALERT_POSITION):
+        pygame.font.Font.__init__(self, font, font_size)
+        text = TextWrapping.wrapline(text)
+        labels = []
+        for line in text:
+            label = self.render(line, 1, font_color)
+            labels.append(label)
+        surface = pygame.image.load(background).convert()
+        self.surface = pygame.transform.scale(surface, (labels[0].get_width() + 10, (labels[0].get_height() * len(labels)) + 10))
+        for index, label in enumerate(labels):
+            self.surface.blit(label, (5, 5 + (index * label.get_height()) + (index * 2)))
+        self.x_pos = pos_x
+        self.y_pos = pos_y
+
+    def is_my_click(self, mpos):
+        pos_x = mpos[0]
+        pos_y = mpos[1]
+        if (pos_x >= self.x_pos and pos_x <= self.x_pos + self.screen_width) and (pos_y >= self.y_pos and pos_y <= self.y_pos + self.screen_height):
+            return True
+        return False
 
 class MenuItem(pygame.font.Font):
     def __init__(self, text, font = MENU_FONT, font_size = MENU_FONT_SIZE, font_color = MENU_FONT_COLOR, (pos_x, pos_y) = (0, 0), padding = 0, horizontal = False):
@@ -65,36 +88,36 @@ class Menu():
         self.y_pos = y_pos
         self.horizontal = horizontal
 
-        def render(self, screen):
-            for item in self.items:
-                if item.is_mouse_over(pygame.mouse.get_pos()):
-                    self.mouse_over(item)
+    def render(self, screen):
+        for item in self.items:
+            if item.is_mouse_over(pygame.mouse.get_pos()):
+                self.mouse_over(item)
+            else:
+                self.mouse_not_over(item)
+            self.screen.blit(item.to_blit, item.position)
+        screen.blit(self.screen, (self.x_pos, self.y_pos))
+
+    def click(self, event):
+        mpos = event.pos
+        for item in self.items:
+            if item.is_mouse_over(mpos):
+                if len(funcs[item.text]) == 1:
+                    self.funcs[item.text][0]()
                 else:
-                    self.mouse_not_over(item)
-                self.screen.blit(item.to_blit, item.position)
-            screen.blit(self.screen, (self.x_pos, self.y_pos))
+                    self.funcs[item.text][0](self.funcs[item.text][1:])
 
-        def click(self, event):
-            mpos = event.pos
-            for item in self.items:
-                if item.is_mouse_over(mpos):
-                    if len(funcs[item.text]) == 1:
-                        self.funcs[item.text][0]()
-                    else:
-                        self.funcs[item.text][0](self.funcs[item.text][1:])
+    def mouse_over(self, item):
+        pass
 
-        def mouse_over(self, item):
-            pass
+    def mouse_not_over(self, item):
+        pass
 
-        def mouse_not_over(self, item):
-            pass
-
-        def is_my_click(self, mpos):
-            pos_x = mpos[0]
-            pos_y = mpos[1]
-            if (pos_x >= self.x_pos and pos_x <= self.x_pos + self.screen_width) and (pos_y >= self.y_pos and pos_y <= self.y_pos + self.screen_height):
-                return True
-            return False
+    def is_my_click(self, mpos):
+        pos_x = mpos[0]
+        pos_y = mpos[1]
+        if (pos_x >= self.x_pos and pos_x <= self.x_pos + self.screen_width) and (pos_y >= self.y_pos and pos_y <= self.y_pos + self.screen_height):
+            return True
+        return False
 
 class StringMenu(Menu):
     #Items is a list of strings to be displayed

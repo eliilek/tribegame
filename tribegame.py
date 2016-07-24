@@ -26,6 +26,9 @@ class TribeGame(object):
         for i in range(0, starting_pop):
             pop.append(Villager(self, rand_name()))
 
+    def set_event(self, event):
+        self.event = event
+
     def loop(self):
         self.land.loop()
         for menu in self.menus:
@@ -69,8 +72,10 @@ class TribeGame(object):
         #Check which frame the click is in, pass to appropriate menu
         ###More logic here to check other menus###
         if self.event != None:
-            if self.event.menu.is_my_click(mpos):
-                self.event.menu.click(mpos)
+            if (type(self.event) == Menu.Alert) and self.event.is_my_click(mpos):
+                self.event = None
+            elif self.event.menu.is_my_click(mpos):
+                self.event.menu.click(event)
         else:
             self.land.click((mpos[0] - self.land_x, mpos[1] - self.land_y))
 

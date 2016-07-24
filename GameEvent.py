@@ -1,6 +1,7 @@
 import pygame
 from GameResources import *
 import TextWrapping
+import random
 
 class Calendar:
     def __init__(self, events):
@@ -16,15 +17,40 @@ class Calendar:
     def get_length(self):
         return len(self.events)
 
+class RandomEvent:
+    def __init__(self, random_event_list):
+        self.random_event_list = random_event_list
+
+    def run(game_object):
+        checked_events = []
+        while(len(self.random_event_list) > 0):
+            event = self.random_event_list.remove(random.choice(self.random_event_list))
+            checked_events.append(event)
+            if event.requirements_met(game_object):
+                self.random_event_list += checked_events
+                event.run(game_object)
+                break
+        else:
+            self.random_event_list = checked_events
+            ###Run none event, nothing much happened?
+
 class GameEvent:
-    def __init__(self, title, text, options_menu):
+    def __init__(self, title, text, options_menu, requirements_func = lambda game_object:True):
         self.title = title
         self.text = text
         self.menu = options_menu
         self.font = pygame.font.Font(MENU_FONT, MENU_FONT_SIZE)
+        self.args = args
+        self.requirements_met = requirements_func
 
+    #If text/title is not a string, it's a function that takes the return type of requirements_met
     def run(self, game_object):
-        lines = TextWrapping.wrapline(text, self.font, EVENT_WIDTH - 10)
+        args = self.requirements_met(game_object)
+        if not instanceof(self.title, basestring):
+            self.title = self.title(args)
+        if not instanceof(self.text, basestring):
+            self.text = self.text(args)
+        lines = TextWrapping.wrapline(self.text, self.font, EVENT_WIDTH - 10)
         rendered_lines = [self.font.render(self.title, 1, MENU_FONT_COLOR)]
         line_height = rendered_lines.get_height()
         text_surface = pygame.Surface(EVENT_WIDTH - 10, line_height * (len(lines) + 2))
