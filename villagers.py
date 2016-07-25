@@ -43,6 +43,9 @@ class Villager(object):
         self.job = IdleJob(self)
         self.parent = parent
 
+    def set_injury(self, val):
+        self.injury = val
+
     def get_xp(self, key):
         if key == None:
             return None

@@ -3,8 +3,10 @@ import TextWrapping
 from GameResources import *
 
 class Alert(pygame.font.Font):
-    def __init__(self, text, background = MENU_BACKGROUND, font = MENU_FONT, font_size = MENU_FONT_SIZE, font_color = MENU_FONT_COLOR, (pos_x, pos_y) = ALERT_POSITION):
+    def __init__(self, text, args = None, background = MENU_BACKGROUND, font = MENU_FONT, font_size = MENU_FONT_SIZE, font_color = MENU_FONT_COLOR, (pos_x, pos_y) = ALERT_POSITION):
         pygame.font.Font.__init__(self, font, font_size)
+        if not isinstance(text, basestring):
+            text = text(args)
         text = TextWrapping.wrapline(text)
         labels = []
         for line in text:

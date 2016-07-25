@@ -40,12 +40,13 @@ class GameEvent:
         self.text = text
         self.menu = options_menu
         self.font = pygame.font.Font(MENU_FONT, MENU_FONT_SIZE)
-        self.args = args
         self.requirements_met = requirements_func
 
     #If text/title is not a string, it's a function that takes the return type of requirements_met
     def run(self, game_object):
         args = self.requirements_met(game_object)
+        for key in self.menu.funcs:
+            self.menu.funcs[key] += [game_object, args]
         if not instanceof(self.title, basestring):
             self.title = self.title(args)
         if not instanceof(self.text, basestring):
