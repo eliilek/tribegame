@@ -26,12 +26,21 @@ class GatherJob(Job):
         self.upper_bound = upper_bound
 
     def work(self, villager):
-        gathered = tile.harvest(self.key, random.randInt(self.lower_bound, self.upper_bound))
-        villager.parent.get_resource(self.key, -gathered)
-        villager.get_xp(self.xp_type)
-        if random.randint(1, 100) <= self.injury_chance:
-            villager.injury += random.randint(1, self.injury_severity)
-        villager.job = None
+        if isinstance(self.key, basestring):
+            gathered = tile.harvest(self.key, random.randInt(self.lower_bound, self.upper_bound))
+            villager.parent.get_resource(self.key, -gathered)
+            villager.get_xp(self.xp_type)
+            if random.randint(1, 100) <= self.injury_chance:
+                villager.injury += random.randint(1, self.injury_severity)
+            villager.job = None
+        else:
+            for index, item in enumerate(self.key):
+                gathered = tile.harvest(item, random.randInt(self.lower_bound[index], self.upper_bound))
+                villager.parent.get_resource(item, -gathered)
+            villager.get_xp(self.xp_type)
+            if random.randint(1, 100) <= self.injury_chance:
+                villager.injury += random.randint(1, self.injury_severity)
+            villager.job = None
 
 class HealJob(Job):
     def __init__(self, name, tile, healing_cap):

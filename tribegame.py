@@ -1,5 +1,6 @@
 import pygame
 import jobs
+from GameResources import *
 
 def rand_name():
     return "Steve"
@@ -10,11 +11,12 @@ class TribeGame(object):
         self.calendar = calendar
         self.calendar.begin()
         self.land = land
+        self.land.parent = self
         self.event = None
 
         ###Change these to be the corner within the side menus
-        self.land_x = 0
-        self.land_y = 0
+        self.land_x = LAND_CORNERS[0]
+        self.land_y = LAND_CORNERS[1]
 
         self.xp_per_level = xp_per_level
         self.pop = []

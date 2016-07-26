@@ -5,17 +5,51 @@ import Menu
 from Menu import Alert
 from GameResources import *
 import random
-
-def multi_function(args):
-    for i in range(len(args)/2):
-        args[i * 2](args[(i * 2) + 1])
+import tilemanager
+import tile
+import jobs
+import Building
 
 def load_for_tribegame():
     random_events = load_random_events()
-    events = load_game_events(random_events)
+    events = load_game_events(random_events, GAME_LENGTH)
     calendar = GameEvent.Calendar(events)
 
+    progenitor_tiles = []
+    #Plains Tile
+    plains = tile.Tile("Resources/plains.png", "Plains", [jobs.GatherJob("Forage", "food", None, "food", 3, 3), \
+        jobs.GatherJob("Hunt Small Game", ("food, hides"), None, "food", (4, 1), (5, 2), 5, 1)], resources ={"food":(50, 50, 5), "hides":(20, 20, 0)})
+    forest = tile.Tile("Resources/forest.png", "Forest", [jobs.GatherJob("Gather Wood", "wood", None, "gather", 10, 10)], resources = {"wood":(250, 250, 8)})
+
+    progenitor_buildings = load_buildings()
+    land = tilemanager.TileManager(LAND_SIZE, progenitor_tiles, progenitor_buildings, SCREEN_SIZE[0] - LAND_CORNERS[0], SCREEN_SIZE[1] - LAND_CORNERS[1])
+
+    tribe_name = "The Demo Tribe"
+
+    starting_pop = 6
+
+    xp_per_level = 3
+
+    size = SCREEN_SIZE
+
     return tribegame.TribeGame(calendar, land, tribe_name, starting_pop, xp_per_level, size)
+
+def load_buildings():
+    buildings = []
+    #Farm Building
+    farm = Building.Building("Farm", "Resources/farm.png", 40)
+    farm.requirements = lambda tile:tile.has_resource("food")
+    farm.costs = lambda :{"wood":20, "food": 10}
+    farm.on_completion = lambda :self.tile.increase_regen("food", 3)
+    farm.progress = farm.completion_progress
+    buildings.append(farm)
+    #Quary Building
+    quarry = Building.Building("Quarry", "Resources/quarry.png", 40)
+    quarry.requirements = lambda tile:tile.has_resource("stone")
+    quarry.costs = lambda :{"wood":20, "stone": 10}
+    quarry.on_completion = lambda :self.tile.increase_multiplier("stone", 0.1)
+    quarry.progress = quarry.completion_progress
+    buildings.append(quarry)
 
 def load_random_events():
     events = []
@@ -44,7 +78,7 @@ def load_random_events():
         if random.random() < .3 else villager.set_injury(game_object.injury_threshold + 1) and game_object.set_event(Alert(failure_text, villager)))]
     options_funcs["This land is no place for the weak. Sharpen the knives."] = [lambda game_object,villager: \
         villager.set_injury(game_object.injury_threshold + 1) and game_object.set_event(Alert(failure_text, villager))]
-    options_menu = Menu.StringMenu(MENU_BACKGROUND, options_text, options_funcs, MENU_FONT, MENU_FONT_SIZE, OPTIONS_COLOR, EVENT_WIDTH, EVENT_HEIGHT))
+    options_menu = Menu.StringMenu(MENU_BACKGROUND, options_text, options_funcs, MENU_FONT, MENU_FONT_SIZE, OPTIONS_COLOR, EVENT_WIDTH, EVENT_HEIGHT)
     events.append(GameEvent.GameEvent(title, text, options_menu, requirements))
 
     #Random event 2
@@ -67,7 +101,17 @@ def load_random_events():
     options_funcs["How nice of our food to come to us! Ready the spears!"] = [lambda game_object,villager: \
         (game_object.get_resource("food", -7) and game_object.set_event(Alert(attack_success)) if random.random() < .4 else \
         game_object.get_resource("food", -4) and villager.injure(2) and game_object.set_event(Alert(attack_failure, villager)))]
+    options_menu = Menu.StringMenu(MENU_BACKGROUND, options_text, options_funcs, MENU_FONT, MENU_FONT_SIZE, OPTIONS_COLOR, EVENT_WIDTH, EVENT_HEIGHT)
+    events.append(GameEvent.GameEvent(title, text, options_menu, requirements))
 
-def load_game_events():
-    events = []
-    #Event 1
+    return events
+
+def load_game_events(random_events, length):
+    events = [None for i in range(length)]
+    #Scheduled events
+
+    #Random events
+    for index, event in enumerate(events):
+        if event == None:
+            events[index] = random.choice(random_events)
+    return events

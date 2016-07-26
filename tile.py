@@ -13,7 +13,10 @@ class Tile(object):
         self.y = y
 
     def clone(self, x = 0, y = 0):
-        return Tile(copy.copy(self.image), self.name, copy.deepcopy(self.jobs), copy.deepcopy(self.resources), copy.deepcopy(self.buildings), x, y)
+        new_tile = Tile(copy.copy(self.image), self.name, copy.deepcopy(self.jobs), copy.deepcopy(self.resources), copy.deepcopy(self.buildings), x, y)
+        for job in new_tile.jobs:
+            job.tile = new_tile
+        return new_tile
 
     def can_build(self, building):
         if building.unique and (building.name in (building.name for building in buildings)):
