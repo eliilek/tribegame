@@ -1,17 +1,17 @@
 import pygame
 import cevent
 import Menu
+import Loader
+import tribegame
 from pygame.locals import *
-
-def hello_world():
-    print "Button Pressed"
+from GameResources import *
 
 class GameApp(cevent.CEvent):
     def __init__(self):
         self._running = True
-        self.display_surf = None
+        self._display_surf = None
         self.game = None
-        self.size = self.width, self.height = 640, 400
+        self.size = self.width, self.height = SCREEN_SIZE
 
     def on_init(self):
         pygame.init()
@@ -20,11 +20,13 @@ class GameApp(cevent.CEvent):
         #Pre-loading goes here!
         #Perhaps a loading screen sometime down the line?
         #Test Code
-        funcs = {'Test1': hello_world,
-                 'Test2': hello_world,
+        funcs = {'New Game': self.start_game,
                  'Quit': self.on_exit}
-        self.game = Menu.StringMenu("BlackMenu.png", ['Test1', 'Test2', 'Quit'], funcs)
+        self.game = Menu.StringMenu("Resources/BlackMenu.png", ['New Game', 'Quit'], funcs)
         #End Test Code
+
+    def start_game(self):
+        self.game = Loader.load_for_tribegame()
 
     def on_event(self, event):
         if event.type == QUIT:
@@ -88,7 +90,7 @@ class GameApp(cevent.CEvent):
     def on_loop(self):
         self.game.loop()
     def on_render(self):
-        self.game.render()
+        self.game.render(self._display_surf)
         pygame.display.flip()
     def on_cleanup(self):
         pygame.quit()
@@ -111,11 +113,11 @@ class GameApp(cevent.CEvent):
         self.game.click(event)
 
     def on_key_down(self, event):
-        if event.key in (K_LEFT, K_RIGHT, K_UP, K_DOWN) and self.game.isinstance(TribeGame):
+        if event.key in (K_LEFT, K_RIGHT, K_UP, K_DOWN) and isinstance(self.game, tribegame.TribeGame):
             self.game.key_down(event.key)
 
     def on_key_up(self, event):
-        if event.key in (K_LEFT, K_RIGHT, K_UP, K_DOWN) and self.game.isinstance(TribeGame):
+        if event.key in (K_LEFT, K_RIGHT, K_UP, K_DOWN) and isinstance(self.game, tribegame.TribeGame):
             self.game.key_up(event.key)
 
 if __name__ == "__main__":

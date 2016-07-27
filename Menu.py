@@ -80,7 +80,11 @@ class MenuItem(pygame.font.Font):
 class Menu():
     #image is the path
 
-    def __init__(self, image, funcs, width = pygame.display.get_surface().get_width(), height = pygame.display.get_surface().get_height(), x_pos = 0, y_pos = 0, horizontal):
+    def __init__(self, image, funcs, width = None, height = None, x_pos = 0, y_pos = 0, horizontal = False):
+        if width == None:
+            width = pygame.display.get_surface().get_width()
+        if height == None:
+            height = pygame.display.get_surface().get_height()
         screen = pygame.image.load(image)
         self.screen = pygame.transform.scale(screen, (width, height))
         self.screen_width = self.screen.get_width()
@@ -90,23 +94,30 @@ class Menu():
         self.y_pos = y_pos
         self.horizontal = horizontal
 
-    def render(self, screen):
+    def render(self, screen, offset = (0, 0)):
         for item in self.items:
-            if item.is_mouse_over(pygame.mouse.get_pos()):
+            mpos = pygame.mouse.get_pos()
+            if item.is_mouse_over((mpos[0] - self.x_pos + offset[0], mpos[1] - self.y_pos + offset[1])):
                 self.mouse_over(item)
             else:
                 self.mouse_not_over(item)
             self.screen.blit(item.to_blit, item.position)
         screen.blit(self.screen, (self.x_pos, self.y_pos))
 
-    def click(self, event):
-        mpos = event.pos
+    def click(self, mpos, offset = (0, 0)):
+        try:
+            mpos = mpos.pos
+        except:
+            pass
         for item in self.items:
-            if item.is_mouse_over(mpos):
-                if len(funcs[item.text]) == 1:
-                    self.funcs[item.text][0]()
-                else:
-                    self.funcs[item.text][0](self.funcs[item.text][1:])
+            if item.is_mouse_over((mpos[0] - self.x_pos + offset[0], mpos[1] - self.y_pos + offset[1])):
+                try:
+                    if len(self.funcs[item.text]) == 1:
+                        self.funcs[item.text][0]()
+                    else:
+                        self.funcs[item.text][0](self.funcs[item.text][1:])
+                except TypeError:
+                    self.funcs[item.text]()
 
     def mouse_over(self, item):
         pass
@@ -126,11 +137,15 @@ class StringMenu(Menu):
     #Funcs is a dictionary mapping strings to tuples of format (function, arg, arg, arg)
     #Funcs requiring args must unpack args from tuple
 
-    def __init__(self, image, items, funcs, font = None, font_size = 30, font_color = (255, 255, 255), width = pygame.display.get_surface().get_width(), height = pygame.display.get_surface().get_height(), button_bg = None, x_pos = 0, y_pos = 0, horizontal = False, item_padding = 10):
+    def __init__(self, image, items, funcs, font = None, font_size = 30, font_color = (255, 255, 255), width = None, height = None, button_bg = None, x_pos = 0, y_pos = 0, horizontal = False, item_padding = 10, title = None):
+        if width == None:
+            width = pygame.display.get_surface().get_width()
+        if height == None:
+            height = pygame.display.get_surface().get_height()
         Menu.__init__(self, image, funcs, width, height, x_pos, y_pos, horizontal)
         self.items = []
         for index, item in enumerate(items):
-            menu_item = MenuItem(item, padding = item_padding, horizontal)
+            menu_item = MenuItem(item, padding = item_padding, horizontal = horizontal)
             if button_bg:
                 menu_item.set_background(pygame.image.load(button_bg))
             if self.horizontal:
@@ -169,8 +184,8 @@ class VillagerMenuItem():
         except:
             xp_label = temp_font.render("No relevant XP", 1, MENU_FONT_COLOR)
         self.base = pygame.Surface((villager.image.get_width() + padding + max(name_label.get_width(), xp_label.get_width()), villager.image.get_height()))
-        self.width = to_blit.get_width()
-        self.height = to_blit.get_height()
+        self.width = self.base.get_width()
+        self.height = self.base.get_height()
         self.base.blit(villager.image, (0,0))
         self.base.blit(name_label, (((self.width + villager.image.get_width() + padding)/2) - (name_label.get_width()/2), (self.height/3) - name_label.get_height()/2))
         self.base.blit(xp_label, (((self.width + villager.image.get_width() + padding)/2) - (xp_label.get_width()/2), (self.height * 2 / 3) - xp_label.get_height()/2))
@@ -199,15 +214,16 @@ class VillagerMenuItem():
         return False
 
     def set_font_color(self, rgb_tuple):
-        name_label = temp_font.render(villager.name, 1, rgb_tuple)
+        temp_font = pygame.font.Font(None, MENU_FONT_SIZE)
+        name_label = temp_font.render(self.villager.name, 1, rgb_tuple)
         try:
-            xp_label = temp_font.render(villager.xp[relevant_xp].level, 1, rgb_tuple)
+            xp_label = temp_font.render(self.villager.xp[relevant_xp].level, 1, rgb_tuple)
         except:
             xp_label = temp_font.render("No relevant XP", 1, rgb_tuple)
         self.base = pygame.Surface(((self.villager.image.get_width() + self.padding + max(name_label.get_width(), xp_label.get_width()), self.villager.image.get_height())))
-        self.base.blit(villager.image, (0,0))
-        self.base.blit(name_label, (((self.width + villager.image.get_width() + padding)/2) - (name_label.get_width()/2), (self.height/3) - name_label.get_height()/2))
-        self.base.blit(xp_label, (((self.width + villager.image.get_width() + padding)/2) - (xp_label.get_width()/2), (self.height * 2 / 3) - xp_label.get_height()/2))
+        self.base.blit(self.villager.image, (0,0))
+        self.base.blit(name_label, (((self.width + self.villager.image.get_width() + self.padding)/2) - (name_label.get_width()/2), (self.height/3) - name_label.get_height()/2))
+        self.base.blit(xp_label, (((self.width + self.villager.image.get_width() + self.padding)/2) - (xp_label.get_width()/2), (self.height * 2 / 3) - xp_label.get_height()/2))
         if self.background != None:
             x = (self.background.get_width() / 2) - (self.base.get_width() / 2)
             y = (self.background.get_height() / 2) - (self.base.get_height() / 2)
@@ -217,7 +233,11 @@ class VillagerMenuItem():
             self.to_blit = self.base.copy()
 
 class VillagerJobMenu(Menu):
-    def __init__(self, image, villagers, funcs, relevant_xp, width = pygame.display.get_surface().get_width(), height = pygame.display.get_surface().get_height(), button_bg = None, x_pos = 0, y_pos = 0, horizontal = False):
+    def __init__(self, image, villagers, funcs, relevant_xp, width = None, height = None, button_bg = None, x_pos = 0, y_pos = 0, horizontal = False):
+        if width == None:
+            width = pygame.display.get_surface().get_width()
+        if height == None:
+            height = pygame.display.get_surface().get_height()
         Menu.__init__(self, image, funcs, width, height, x_pos, y_pos, horizontal)
         self.items = []
         for index, villager in enumerate(villagers):
@@ -225,11 +245,11 @@ class VillagerJobMenu(Menu):
             if button_bg != None:
                 menu_item.set_background(pygame.image.load(button_bg))
             if self.horizontal:
-                t_w = len(items) * menu_item.width
+                t_w = len(villagers) * menu_item.width
                 pos_x = (self.screen_width / 2) - (t_w / 2) + ((index * 2) + index * menu_item.width)
                 pos_y = (self.screen_height / 2) - (menu_item.height / 2)
             else:
-                t_h = len(items) * menu_item.height
+                t_h = len(villagers) * menu_item.height
                 pos_x = (self.screen_width / 2) - (menu_item.width / 2)
                 pos_y = (self.screen_height / 2) - (t_h / 2) + ((index * 2) + index * menu_item.height)
             menu_item.set_position(pos_x, pos_y)

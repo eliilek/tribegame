@@ -38,9 +38,10 @@ class Villager(object):
     def __init__(self, parent, name, image):
         self.name = name
         self.image = pygame.image.load(image).convert()
+        self.image = pygame.transform.scale(self.image, (25, 25))
         self.xp = {"food":XP(parent.xp_per_level),"gather":XP(parent.xp_per_level),"fight":XP(parent.xp_per_level), "build":XP(parent.xp_per_level)}
         self._injury = 0
-        self.job = IdleJob(self)
+        self.job = None
         self.parent = parent
 
     def injure(self, val):
@@ -72,6 +73,5 @@ class Villager(object):
             args[1]()
 
     def work(self):
-        if self.job == None:
-            self.job = IdleJob(self)
-        self.job.work(self)
+        if self.job != None:
+            self.job.work(self)

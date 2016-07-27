@@ -11,11 +11,8 @@ class Job():
         self.working_villagers = []
         self.xp_type = None
 
-    def work(self):
+    def work(self, villager):
         pass
-
-class IdleJob(Job):
-    pass
 
 class GatherJob(Job):
     def __init__(self, name, key, tile, xp_type, lower_bound, upper_bound, injury_chance = 0, injury_severity = 1):
@@ -49,7 +46,7 @@ class HealJob(Job):
 
     def work(self, villager):
         villager.injury -= random.randint(1, self.healing_cap)
-        if villager.injury = 0:
+        if villager.injury == 0:
             villager.job = None
 
 class ConstructionJob(Job):

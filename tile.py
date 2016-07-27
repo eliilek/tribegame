@@ -1,20 +1,27 @@
 import pygame
 import copy
+from GameResources import *
+import jobs
 
 class Tile(object):
-    def __init__(self, image, name, jobs = [], resources = {}, buildings = [], x = 0, y = 0):
+    def __init__(self, image, name, tile_jobs = [], resources = {}, buildings = [], x = 0, y = 0):
         self.name = name
         self.buildings = buildings
-        self.jobs = jobs
-        self.image = pygame.image.load(image).convert()
+        self.tile_jobs = tile_jobs
+        if isinstance(image, basestring):
+            self.image = pygame.image.load(image).convert()
+            self.image = pygame.transform.scale(self.image, TILE_SIZE)
+        else:
+            self.image = image
+        self.renderable = self.image.copy()
         self._resources = resources
         self.reachable = False
         self.x = x
         self.y = y
 
     def clone(self, x = 0, y = 0):
-        new_tile = Tile(copy.copy(self.image), self.name, copy.deepcopy(self.jobs), copy.deepcopy(self.resources), copy.deepcopy(self.buildings), x, y)
-        for job in new_tile.jobs:
+        new_tile = Tile(copy.copy(self.image), self.name, copy.deepcopy(self.tile_jobs), copy.deepcopy(self._resources), copy.deepcopy(self.buildings), x, y)
+        for job in new_tile.tile_jobs:
             job.tile = new_tile
         return new_tile
 
@@ -53,12 +60,15 @@ class Tile(object):
     #Clone first
     def to_village(self, healing_cap):
         self.name = "Village"
-        self.jobs.append(HealJob(self, healing_cap))
+        self.tile_jobs.append(jobs.HealJob("Rest", self, healing_cap))
+        village_image = pygame.image.load(VILLAGE_IMAGE).convert()
+        village_image = pygame.transform.scale(village_image, (20, 20))
+        self.renderable.blit(village_image, (15, 15))
         ###Add procreation job
 
     def build(self, building):
         self.buildings.append(building)
-        self.jobs.append(building.construction_job)
+        self.tile_jobs.append(building.construction_job)
 
     def harvest(self, key, num):
         try:
@@ -85,13 +95,13 @@ class Tile(object):
     def available_jobs(self):
         if not self.reachable:
             ###MIGRATION JOB GOES HERE
-            return None
+            return []
         else:
-            return self.jobs
+            return self.tile_jobs
 
     def remove_job(self, job):
-        if job in self.jobs:
-            self.jobs.remove(job)
+        if job in self.tile_jobs:
+            self.tile_jobs.remove(job)
 
     def render(self, screen, x, y):
-        screen.blit(self.image, (x, y))
+        screen.blit(self.renderable, (x, y))

@@ -17,11 +17,14 @@ def load_for_tribegame():
 
     progenitor_tiles = []
     #Plains Tile
-    plains = tile.Tile("Resources/plains.png", "Plains", [jobs.GatherJob("Forage", "food", None, "food", 3, 3), \
-        jobs.GatherJob("Hunt Small Game", ("food, hides"), None, "food", (4, 1), (5, 2), 5, 1)], resources ={"food":(50, 50, 5), "hides":(20, 20, 0)})
-    forest = tile.Tile("Resources/forest.png", "Forest", [jobs.GatherJob("Gather Wood", "wood", None, "gather", 10, 10)], resources = {"wood":(250, 250, 8)})
+    #plains = tile.Tile("Resources/plains.png", "Plains", [jobs.GatherJob("Forage", "food", None, "food", 3, 3), \
+    #    jobs.GatherJob("Hunt Small Game", ("food, hides"), None, "food", (4, 1), (5, 2), 5, 1)], resources ={"food":(50, 50, 5), "hides":(20, 20, 0)})
+    #progenitor_tiles.append(plains)
+    forest = tile.Tile("Resources/forest.jpg", "Forest", [jobs.GatherJob("Gather Wood", "wood", None, "gather", 10, 10)], resources = {"wood":(250, 250, 8)})
+    progenitor_tiles.append(forest)
 
-    progenitor_buildings = load_buildings()
+    #progenitor_buildings = load_buildings()
+    progenitor_buildings = []
     land = tilemanager.TileManager(LAND_SIZE, progenitor_tiles, progenitor_buildings, SCREEN_SIZE[0] - LAND_CORNERS[0], SCREEN_SIZE[1] - LAND_CORNERS[1])
 
     tribe_name = "The Demo Tribe"
@@ -71,8 +74,8 @@ def load_random_events():
         if game_object.enough_resources({"food": 5}) else None)]
     options_funcs["Cut away the rot! We must do everything in our power to save their life! (+1 injury)"] = [lambda game_object,villager: \
         ((villager.set_injury(villager.injury + 1) if random.random() < .9 else \
-        villager.set_injury(game_object.injury_threshold + 1) and game_object.set_event(Alert(failure_text, villager)))] \
-        if villager.injury < game_object.injury_threshold else None)
+        villager.set_injury(game_object.injury_threshold + 1) and game_object.set_event(Alert(failure_text, villager))) \
+        if villager.injury < game_object.injury_threshold else None)]
     options_funcs["Only the spirits can decide their fate now."] = [lambda game_object,villager: \
         (game_object.set_event(Alert(success_text, villager)) \
         if random.random() < .3 else villager.set_injury(game_object.injury_threshold + 1) and game_object.set_event(Alert(failure_text, villager)))]

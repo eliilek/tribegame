@@ -1,5 +1,6 @@
 import pygame
 import jobs
+import villagers
 from GameResources import *
 
 def rand_name():
@@ -20,21 +21,19 @@ class TribeGame(object):
 
         self.xp_per_level = xp_per_level
         self.pop = []
-        self._resources = {'wood':starting_wood, 'stone':starting_stone, 'food':(starting_food if starting_food != -1 else starting_pop * 6))}
+        self._resources = {'wood':starting_wood, 'stone':starting_stone, 'food':(starting_food if starting_food != -1 else starting_pop * 6)}
         self.injury_threshold = 5
         self.healing_cap = 1
         self.surf = pygame.Surface(size)
         ###Render sidebar menus onto surf here
         for i in range(0, starting_pop):
-            pop.append(Villager(self, rand_name()))
+            self.pop.append(villagers.Villager(self, rand_name(), "Resources/villager.jpg"))
 
     def set_event(self, event):
         self.event = event
 
     def loop(self):
         self.land.loop()
-        for menu in self.menus:
-            menu.loop()
 
     def turn(self):
         for villager in pop:
@@ -43,10 +42,11 @@ class TribeGame(object):
         if event != None:
             event.run(self)
 
-    def render(self):
+    def render(self, screen):
         self.land.render(self.surf, self.land_x, self.land_y)
         if self.event != None:
             self.surf.blit(self.event.surface, (self.event.x_pos, self.event.y_pos))
+        screen.blit(self.surf, (0, 0))
 
     def remove_pop(self, child):
         self.pop.remove(child)
@@ -98,8 +98,8 @@ class TribeGame(object):
 
     def available_villagers(self):
         free = []
-        for villager in pop:
-            if villager.job == None or isinstance(villager.job, jobs.IdleJob):
+        for villager in self.pop:
+            if villager.job == None:
                 free.append(villager)
         return free
 
