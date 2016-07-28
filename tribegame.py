@@ -28,10 +28,10 @@ class TribeGame(object):
 
         self.frame_objects = []
         next_turn = Menu.StringMenu("Resources/turn_button.jpg", ["Next Turn"], {"Next Turn": self.turn}, width = 150, height = 50, x_pos = SCREEN_SIZE[0], y_pos = SCREEN_SIZE[1])
-        next_turn.mouse_over = lambda item: pass
-        next_turn.mouse_not_over = lambda item: pass
+        next_turn.mouse_over = lambda item: None
+        next_turn.mouse_not_over = lambda item: None
         self.frame_objects.append(next_turn)
-        
+
 
         for i in range(0, starting_pop):
             self.pop.append(villagers.Villager(self, rand_name(), "Resources/villager.jpg"))
@@ -50,7 +50,7 @@ class TribeGame(object):
             event.run(self)
 
     def render(self, screen):
-        for item in frame_objects:
+        for item in self.frame_objects:
             item.render(self.surf)
         self.land.render(self.surf, self.land_rect.x, self.land_rect.y)
         if self.event != None:

@@ -101,7 +101,7 @@ class GameApp(cevent.CEvent):
             self._running = False
 
         while self._running:
-            ms = clock.tick(60)
+            ms = self.clock.tick(60)
             for event in pygame.event.get():
                 self.on_event(event)
             self.on_loop()

@@ -169,31 +169,47 @@ class StringMenu(Menu):
         pass
 
 class TopBarMenu(StringMenu):
-    def __init__(self, image, items, font = None, font_size = 20, font_color = (255, 255, 255), width = None, height = None, horizontal = True):
-        StringMenu.__init__(self, image, items, {item: lambda:None for item in items}, font, font_size, font_color, width, height, horizontal = horizontal)
-        
+    def __init__(self, image, game_object, font = None, font_size = 20, font_color = (255, 255, 255), width = None, height = None):
+        self.game_object = game_object
+        self.prev_resources = [key + ": " + val for key, val in self.game_object._resources]
+        self.width = width
+        self.height = height
+        StringMenu.__init__(self, image, resources, {item: lambda:None for item in items}, font, font_size, font_color, self.width, self.height, horizontal = True)
+
+    def mouse_over(self, item):
+        pass
+
+    def mouse_not_over(self, item):
+        pass
+
+    def loop(self):
+        if self.prev_resources != [key + ": " + val for key, val in self.game_object._resources]:
+            StringMenu.__init__(self, image, resources, {item: lambda:None for item in items}, None, 20, (255, 255, 255), self.width, self.height, horizontal = True)
 
 #Villager image on left, right is villager name, relevant villager XP beneath, centered on villager image height
 class VillagerMenuItem():
-    def __init__(self, villager, relevant_xp, (pos_x, pos_y) = (0, 0), padding = 20):
+    def __init__(self, villager, relevant_xp, (pos_x, pos_y) = (0, 0), padding = 5):
         self.pos_x = pos_x
         self.pos_y = pos_y
         self.position = (pos_x, pos_y)
         self.background = None
         self.villager = villager
         self.padding = padding
-        temp_font = pygame.font.Font(None, MENU_FONT_SIZE)
+        temp_font = pygame.font.Font(None, 20)
         name_label = temp_font.render(villager.name, 1, MENU_FONT_COLOR)
         try:
             xp_label = temp_font.render(villager.xp[relevant_xp].level, 1, MENU_FONT_COLOR)
         except:
             xp_label = temp_font.render("No relevant XP", 1, MENU_FONT_COLOR)
+        print name_label.get_width(), xp_label.get_width()
+        print name_label.get_height(), xp_label.get_height()
         self.base = pygame.Surface((villager.image.get_width() + padding + max(name_label.get_width(), xp_label.get_width()), villager.image.get_height()))
         self.width = self.base.get_width()
         self.height = self.base.get_height()
-        self.base.blit(villager.image, (0,0))
-        self.base.blit(name_label, (((self.width + villager.image.get_width() + padding)/2) - (name_label.get_width()/2), (self.height/3) - name_label.get_height()/2))
-        self.base.blit(xp_label, (((self.width + villager.image.get_width() + padding)/2) - (xp_label.get_width()/2), (self.height * 2 / 3) - xp_label.get_height()/2))
+        print self.width, self.height
+        #self.base.blit(villager.image, (0,0))
+        #self.base.blit(name_label, (((self.width + villager.image.get_width() + padding)/2) - (name_label.get_width()/2), (self.height/3) - name_label.get_height()/2))
+        #self.base.blit(xp_label, (((self.width + villager.image.get_width() + padding)/2) - (xp_label.get_width()/2), (self.height * 2 / 3) - xp_label.get_height()/2))
         self.to_blit = self.base.copy()
 
     def set_position(self, x, y):
@@ -219,7 +235,7 @@ class VillagerMenuItem():
         return False
 
     def set_font_color(self, rgb_tuple):
-        temp_font = pygame.font.Font(None, MENU_FONT_SIZE)
+        temp_font = pygame.font.Font(None, 20)
         name_label = temp_font.render(self.villager.name, 1, rgb_tuple)
         try:
             xp_label = temp_font.render(self.villager.xp[relevant_xp].level, 1, rgb_tuple)
