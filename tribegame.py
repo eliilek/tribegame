@@ -2,6 +2,7 @@ import pygame
 import jobs
 import villagers
 from GameResources import *
+import Menu
 
 def rand_name():
     return "Steve"
@@ -16,8 +17,7 @@ class TribeGame(object):
         self.event = None
 
         ###Change these to be the corner within the side menus
-        self.land_x = LAND_CORNERS[0]
-        self.land_y = LAND_CORNERS[1]
+        self.land_rect = pygame.Rect(LAND_CORNERS)
 
         self.xp_per_level = xp_per_level
         self.pop = []
@@ -25,7 +25,14 @@ class TribeGame(object):
         self.injury_threshold = 5
         self.healing_cap = 1
         self.surf = pygame.Surface(size)
-        ###Render sidebar menus onto surf here
+
+        self.frame_objects = []
+        next_turn = Menu.StringMenu("Resources/turn_button.jpg", ["Next Turn"], {"Next Turn": self.turn}, width = 150, height = 50, x_pos = SCREEN_SIZE[0], y_pos = SCREEN_SIZE[1])
+        next_turn.mouse_over = lambda item: pass
+        next_turn.mouse_not_over = lambda item: pass
+        self.frame_objects.append(next_turn)
+        
+
         for i in range(0, starting_pop):
             self.pop.append(villagers.Villager(self, rand_name(), "Resources/villager.jpg"))
 
@@ -43,7 +50,9 @@ class TribeGame(object):
             event.run(self)
 
     def render(self, screen):
-        self.land.render(self.surf, self.land_x, self.land_y)
+        for item in frame_objects:
+            item.render(self.surf)
+        self.land.render(self.surf, self.land_rect.x, self.land_rect.y)
         if self.event != None:
             self.surf.blit(self.event.surface, (self.event.x_pos, self.event.y_pos))
         screen.blit(self.surf, (0, 0))
@@ -79,7 +88,14 @@ class TribeGame(object):
             elif self.event.menu.is_my_click(mpos):
                 self.event.menu.click(event)
         else:
-            self.land.click((mpos[0] - self.land_x, mpos[1] - self.land_y))
+            if self.land_rect.collidepoint(mpos):
+                self.land.click((mpos[0] - self.land_rect.x, mpos[1] - self.land_rect.y))
+            else:
+                for item in self.frame_objects:
+                    if item.is_my_click(mpos):
+                        item.click(mpos)
+                #Pass click to outer menus
+
 
     def key_down(self, key):
         self.land.key_down(key)

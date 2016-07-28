@@ -64,8 +64,8 @@ class GameEvent:
         event_surface.blit(text_surface, (5, 5))
         event_surface.blit(self.menu, (event_surface.get_width()/2 - self.menu.get_width()/2, event_surface.get_height() - (self.menu.get_height() + 5)))
         #position on main screen
-        self.x_pos = (game_object.land_x + pygame.display.get_surface().get_width())/2 - event_surface.get_width()/2
-        self.y_pos = (game_object.land_y + pygame.display.get_surface().get_height())/2 - event_surface.get_height()/2
+        self.x_pos = (game_object.land_rect.x + pygame.display.get_surface().get_width())/2 - event_surface.get_width()/2
+        self.y_pos = (game_object.land_rect.y + pygame.display.get_surface().get_height())/2 - event_surface.get_height()/2
         self.menu.set_position(((event_surface.get_width()/2 - self.menu.get_width()/2) + self.x_pos, event_surface.get_height() - (self.menu.get_height() + 5) + self.y_pos))
         game_object.event = self
         self.surface = event_surface

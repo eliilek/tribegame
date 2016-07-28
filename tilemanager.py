@@ -101,18 +101,18 @@ class TileManager(object):
     def scroll(self, direction):
         renderable_screen = self.background_screen.copy()
         if direction == "up":
-            self.camera_y -= 10
+            self.camera_y -= SCROLL_SPEED
             if self.camera_y < 0:
                 self.camera_y = 0
         elif direction == "down":
-            self.camera_y += 10
+            self.camera_y += SCROLL_SPEED
             if self.camera_y > renderable_screen.get_height() - self.camera_height:
                 self.camera_y = renderable_screen.get_height() - self.camera_height
         elif direction == "left":
-            self.camera_x -= 10
+            self.camera_x -= SCROLL_SPEED
             if self.camera_x < 0:
                 self.camera_x = 0
         else:
-            self.camera_x += 10
+            self.camera_x += SCROLL_SPEED
             if self.camera_x > renderable_screen.get_width() - self.camera_width:
                 self.camera_x = renderable_screen.get_width() - self.camera_width

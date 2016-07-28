@@ -12,6 +12,7 @@ class GameApp(cevent.CEvent):
         self._display_surf = None
         self.game = None
         self.size = self.width, self.height = SCREEN_SIZE
+        self.clock = pygame.time.Clock()
 
     def on_init(self):
         pygame.init()
@@ -100,6 +101,7 @@ class GameApp(cevent.CEvent):
             self._running = False
 
         while self._running:
+            ms = clock.tick(60)
             for event in pygame.event.get():
                 self.on_event(event)
             self.on_loop()

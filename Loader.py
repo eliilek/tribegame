@@ -25,7 +25,7 @@ def load_for_tribegame():
 
     #progenitor_buildings = load_buildings()
     progenitor_buildings = []
-    land = tilemanager.TileManager(LAND_SIZE, progenitor_tiles, progenitor_buildings, SCREEN_SIZE[0] - LAND_CORNERS[0], SCREEN_SIZE[1] - LAND_CORNERS[1])
+    land = tilemanager.TileManager(LAND_SIZE, progenitor_tiles, progenitor_buildings, LAND_CORNERS[1][0], LAND_CORNERS[1][1])
 
     tribe_name = "The Demo Tribe"
 

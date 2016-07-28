@@ -168,6 +168,11 @@ class StringMenu(Menu):
     def loop(self):
         pass
 
+class TopBarMenu(StringMenu):
+    def __init__(self, image, items, font = None, font_size = 20, font_color = (255, 255, 255), width = None, height = None, horizontal = True):
+        StringMenu.__init__(self, image, items, {item: lambda:None for item in items}, font, font_size, font_color, width, height, horizontal = horizontal)
+        
+
 #Villager image on left, right is villager name, relevant villager XP beneath, centered on villager image height
 class VillagerMenuItem():
     def __init__(self, villager, relevant_xp, (pos_x, pos_y) = (0, 0), padding = 20):
