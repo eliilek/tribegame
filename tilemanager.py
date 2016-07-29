@@ -40,7 +40,7 @@ class TileManager(object):
                 self.scroll(direction)
         renderable_screen = self.background_screen.copy()
         if self.open_menu != None:
-            self.open_menu.render(renderable_screen, (self.camera_x, self.camera_y))
+            self.open_menu.render(renderable_screen, (self.camera_x - x, self.camera_y - y))
         ###For each tile within the camera, render buildings for that tile.
         ###Also render mobile objects like herds once that's sorted.
         screen.blit(renderable_screen, (x, y), Rect((self.camera_x, self.camera_y), (self.camera_width, self.camera_height)))
@@ -67,9 +67,8 @@ class TileManager(object):
         job = args[0]
         villagers = self.parent.available_villagers()
         funcs = {}
-        job.tile.tile_jobs.append(job)
         for villager in villagers:
-            funcs[villager] = (villager.assign_job, (job, self.clear_menu))
+            funcs[villager] = (villager.assign_job, job, self.clear_menu)
         self.open_menu = Menu.VillagerJobMenu(MENU_BACKGROUND, villagers, funcs, job.xp_type, TILE_MENU_WIDTH, TILE_MENU_HEIGHT, TILE_MENU_BG, self.open_menu.x_pos, self.open_menu.y_pos)
 
     def clear_menu(self):

@@ -21,6 +21,8 @@ class TribeGame(object):
         self.land_rect = pygame.Rect(LAND_CORNERS)
 
         self.xp_per_level = xp_per_level
+        self.double_xp_chance = 0
+        self.xp_loss_chance = 5
         self.pop = []
         self._resources = {'wood':starting_wood, 'stone':starting_stone, 'food':(starting_food if starting_food != -1 else starting_pop * 6)}
         self.injury_threshold = 5
@@ -44,7 +46,7 @@ class TribeGame(object):
         self.land.loop()
 
     def turn(self):
-        for villager in pop:
+        for villager in self.pop:
             villager.work()
         event = self.calendar.next_turn()
         if event != None:

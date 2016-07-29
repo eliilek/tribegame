@@ -47,9 +47,9 @@ class GameEvent:
         args = self.requirements_met(game_object)
         for key in self.menu.funcs:
             self.menu.funcs[key] += [game_object, args]
-        if not instanceof(self.title, basestring):
+        if not isinstance(self.title, basestring):
             self.title = self.title(args)
-        if not instanceof(self.text, basestring):
+        if not isinstance(self.text, basestring):
             self.text = self.text(args)
         lines = TextWrapping.wrapline(self.text, self.font, EVENT_WIDTH - 10)
         rendered_lines = [self.font.render(self.title, 1, MENU_FONT_COLOR)]

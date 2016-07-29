@@ -30,7 +30,7 @@ class Villager(object):
     @injury.setter
     def injury(self, x):
         self._injury = x
-        if self._injury > parent.injury_threshold:
+        if self._injury > self.parent.injury_threshold:
             self.kill()
         elif self._injury < 0:
             self._injury = 0
