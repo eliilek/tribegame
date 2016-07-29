@@ -82,7 +82,7 @@ class Tile(object):
                 self._resources[key][0] = 0
                 if len(self._resources[key]) >= 4:
                     val *= self._resources[key][3]
-                return val
+                return int(val + 0.5)
         except:
             return 0
 

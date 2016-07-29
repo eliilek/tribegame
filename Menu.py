@@ -195,21 +195,19 @@ class VillagerMenuItem():
         self.background = None
         self.villager = villager
         self.padding = padding
-        temp_font = pygame.font.Font(None, 20)
+        self.relevant_xp = relevant_xp
+        temp_font = pygame.font.Font(None, VILLAGER_MENU_FONT_SIZE)
         name_label = temp_font.render(villager.name, 1, MENU_FONT_COLOR)
         try:
-            xp_label = temp_font.render(villager.xp[relevant_xp].level, 1, MENU_FONT_COLOR)
+            xp_label = temp_font.render(villager.xp[self.relevant_xp].level, 1, MENU_FONT_COLOR)
         except:
             xp_label = temp_font.render("No relevant XP", 1, MENU_FONT_COLOR)
-        print name_label.get_width(), xp_label.get_width()
-        print name_label.get_height(), xp_label.get_height()
         self.base = pygame.Surface((villager.image.get_width() + padding + max(name_label.get_width(), xp_label.get_width()), villager.image.get_height()))
         self.width = self.base.get_width()
         self.height = self.base.get_height()
-        print self.width, self.height
-        #self.base.blit(villager.image, (0,0))
-        #self.base.blit(name_label, (((self.width + villager.image.get_width() + padding)/2) - (name_label.get_width()/2), (self.height/3) - name_label.get_height()/2))
-        #self.base.blit(xp_label, (((self.width + villager.image.get_width() + padding)/2) - (xp_label.get_width()/2), (self.height * 2 / 3) - xp_label.get_height()/2))
+        self.base.blit(villager.image, (0,0))
+        self.base.blit(name_label, (((self.width + villager.image.get_width() + padding)/2) - (name_label.get_width()/2), (self.height/3) - name_label.get_height()/2))
+        self.base.blit(xp_label, (((self.width + villager.image.get_width() + padding)/2) - (xp_label.get_width()/2), (self.height * 2 / 3) - xp_label.get_height()/2))
         self.to_blit = self.base.copy()
 
     def set_position(self, x, y):
@@ -235,10 +233,10 @@ class VillagerMenuItem():
         return False
 
     def set_font_color(self, rgb_tuple):
-        temp_font = pygame.font.Font(None, 20)
+        temp_font = pygame.font.Font(None, VILLAGER_MENU_FONT_SIZE)
         name_label = temp_font.render(self.villager.name, 1, rgb_tuple)
         try:
-            xp_label = temp_font.render(self.villager.xp[relevant_xp].level, 1, rgb_tuple)
+            xp_label = temp_font.render(self.villager.xp[self.relevant_xp].level, 1, rgb_tuple)
         except:
             xp_label = temp_font.render("No relevant XP", 1, rgb_tuple)
         self.base = pygame.Surface(((self.villager.image.get_width() + self.padding + max(name_label.get_width(), xp_label.get_width()), self.villager.image.get_height())))
@@ -286,10 +284,13 @@ class VillagerJobMenu(Menu):
         #Animate villager images if animated
         pass
 
-    def click(self, event):
-        mpos = event.pos
+    def click(self, event, offset):
+        try:
+            mpos = mpos.pos
+        except:
+            pass
         for item in self.items:
-            if item.is_mouse_over(mpos):
+            if item.is_mouse_over((mpos[0] - self.x_pos + offset[0], mpos[1] - self.y_pos + offset[1])):
                 if len(funcs[item.villager]) == 1:
                     self.funcs[item.villager][0]()
                 else:

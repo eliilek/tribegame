@@ -22,6 +22,7 @@ def load_for_tribegame():
     #progenitor_tiles.append(plains)
     forest = tile.Tile("Resources/forest.jpg", "Forest", [jobs.GatherJob("Gather Wood", "wood", None, "gather", 10, 10)], resources = {"wood":(250, 250, 8)})
     progenitor_tiles.append(forest)
+    rocks = tile.Tile("Resources/rocky.jpg", "Rocky Outcrop", [jobs.GatherJob("Gather Stone", "stone", None, "gather", 4, 4)], resources = {"stone":(200, 200, 0)})
 
     #progenitor_buildings = load_buildings()
     progenitor_buildings = []

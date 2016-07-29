@@ -24,7 +24,14 @@ class GatherJob(Job):
 
     def work(self, villager):
         if isinstance(self.key, basestring):
-            gathered = tile.harvest(self.key, random.randInt(self.lower_bound, self.upper_bound))
+            base_yield = random.randInt(self.lower_bound, self.upper_bound)
+            if villager.xp[self.xp_type].level >= 2:
+                attempt = base_yield * (villager.xp[self.xp_type].level * .20 + .60)
+                injury_chance = self.injury_chance
+            else:
+                attempt = base_yield
+                injury_chance = self.injury_chance + (5 * (2 - villager.xp[self.xp_type].level))
+            gathered = self.tile.harvest(self.key, attempt)
             villager.parent.get_resource(self.key, -gathered)
             villager.get_xp(self.xp_type)
             if random.randint(1, 100) <= self.injury_chance:

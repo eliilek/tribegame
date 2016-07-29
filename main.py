@@ -28,6 +28,7 @@ class GameApp(cevent.CEvent):
 
     def start_game(self):
         self.game = Loader.load_for_tribegame()
+        self.game.parent = self
 
     def on_event(self, event):
         if event.type == QUIT:

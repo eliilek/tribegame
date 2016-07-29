@@ -8,13 +8,14 @@ def rand_name():
     return "Steve"
 
 class TribeGame(object):
-    def __init__(self, calendar, land, tribe_name, starting_pop, xp_per_level, size, starting_food = -1, starting_wood = 0, starting_stone = 0):
+    def __init__(self, calendar, land, tribe_name, starting_pop, xp_per_level, size, starting_food = -1, starting_wood = 0, starting_stone = 0, parent = None):
         self.tribe_name = tribe_name
         self.calendar = calendar
         self.calendar.begin()
         self.land = land
         self.land.parent = self
         self.event = None
+        self.parent = parent
 
         ###Change these to be the corner within the side menus
         self.land_rect = pygame.Rect(LAND_CORNERS)
@@ -27,7 +28,7 @@ class TribeGame(object):
         self.surf = pygame.Surface(size)
 
         self.frame_objects = []
-        next_turn = Menu.StringMenu("Resources/turn_button.jpg", ["Next Turn"], {"Next Turn": self.turn}, width = 150, height = 50, x_pos = SCREEN_SIZE[0], y_pos = SCREEN_SIZE[1])
+        next_turn = Menu.StringMenu("Resources/turn_button.jpg", ["Next Turn"], {"Next Turn": self.turn}, width = 150, height = 50, x_pos = SCREEN_SIZE[0] - 150, y_pos = SCREEN_SIZE[1] - 50)
         next_turn.mouse_over = lambda item: None
         next_turn.mouse_not_over = lambda item: None
         self.frame_objects.append(next_turn)
@@ -48,6 +49,8 @@ class TribeGame(object):
         event = self.calendar.next_turn()
         if event != None:
             event.run(self)
+        if len(pop) == 0:
+            self.game_over()
 
     def render(self, screen):
         for item in self.frame_objects:
@@ -85,6 +88,8 @@ class TribeGame(object):
         if self.event != None:
             if (type(self.event) == Menu.Alert) and self.event.is_my_click(mpos):
                 self.event = None
+                if len(self.pop) == 0:
+                    parent._running = False
             elif self.event.menu.is_my_click(mpos):
                 self.event.menu.click(event)
         else:
@@ -95,7 +100,6 @@ class TribeGame(object):
                     if item.is_my_click(mpos):
                         item.click(mpos)
                 #Pass click to outer menus
-
 
     def key_down(self, key):
         self.land.key_down(key)
@@ -118,6 +122,10 @@ class TribeGame(object):
             if villager.job == None:
                 free.append(villager)
         return free
+
+    def game_over(self):
+        self.event = Menu.Alert("Your last villager has shuffled off this mortal coil. Years from now, another tribe may stumble across your \
+            abandoned village and wonder what failure brought you to such ruin. But they will have no answer.")
 
 if __name__ == "__main__":
     import GameEvent
