@@ -17,9 +17,9 @@ def load_for_tribegame():
 
     progenitor_tiles = []
     #Plains Tile
-    #plains = tile.Tile("Resources/plains.png", "Plains", [jobs.GatherJob("Forage", "food", None, "food", 3, 3), \
-    #    jobs.GatherJob("Hunt Small Game", ("food, hides"), None, "food", (4, 1), (5, 2), 5, 1)], resources ={"food":(50, 50, 5), "hides":(20, 20, 0)})
-    #progenitor_tiles.append(plains)
+    plains = tile.Tile("Resources/plains.jpg", "Plains", [jobs.GatherJob("Forage", "food", None, "food", 3, 3), \
+        jobs.GatherJob("Hunt Small Game", ("food", "hides"), None, "food", (4, 1), (5, 2), 5, 1)], resources ={"food":(50, 50, 5), "hides":(20, 20, 0)})
+    progenitor_tiles.append(plains)
     forest = tile.Tile("Resources/forest.jpg", "Forest", [jobs.GatherJob("Gather Wood", "wood", None, "gather", 10, 10)], resources = {"wood":(250, 250, 8)})
     progenitor_tiles.append(forest)
     rocks = tile.Tile("Resources/rocky.jpg", "Rocky Outcrop", [jobs.GatherJob("Gather Stone", "stone", None, "gather", 4, 4)], resources = {"stone":(200, 200, 0)})
