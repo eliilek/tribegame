@@ -68,7 +68,11 @@ class GameEvent:
         self.x_pos = (game_object.land_rect.x + pygame.display.get_surface().get_width())/2 - event_surface.get_width()/2
         self.y_pos = (game_object.land_rect.y + pygame.display.get_surface().get_height())/2 - event_surface.get_height()/2
         self.menu.x_pos = (event_surface.get_width()/2 - self.menu.screen_width/2)
-        self.menu.y_pos = event_surface.get_height() - (self.menu.screen_height + 5)
+        self.menu.y_pos = text_surface.get_height() + 20
         self.menu.render(event_surface, (self.x_pos, self.y_pos))
         game_object.event = self
         self.surface = event_surface
+
+    def render(self, screen):
+        self.menu.render(self.surface, (-self.x_pos, -self.y_pos))
+        screen.blit(self.surface, (self.x_pos, self.y_pos))

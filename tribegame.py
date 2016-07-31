@@ -59,7 +59,7 @@ class TribeGame(object):
             item.render(self.surf)
         self.land.render(self.surf, self.land_rect.x, self.land_rect.y)
         if self.event != None:
-            self.surf.blit(self.event.surface, (self.event.x_pos, self.event.y_pos))
+            self.event.render(self.surf)
         screen.blit(self.surf, (0, 0))
 
     def remove_pop(self, child):
@@ -88,12 +88,13 @@ class TribeGame(object):
         #Check which frame the click is in, pass to appropriate menu
         ###More logic here to check other menus###
         if self.event != None:
+            print mpos, (mpos[0]-self.event.x_pos, mpos[1]-self.event.y_pos)
             if (type(self.event) == Menu.Alert) and self.event.is_my_click(mpos):
                 self.event = None
                 if len(self.pop) == 0:
                     parent._running = False
             elif self.event.menu.is_my_click(mpos):
-                self.event.menu.click(event)
+                self.event.menu.click(event, (-self.event.x_pos, -self.event.y_pos))
         else:
             if self.land_rect.collidepoint(mpos):
                 self.land.click((mpos[0] - self.land_rect.x, mpos[1] - self.land_rect.y))

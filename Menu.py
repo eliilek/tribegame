@@ -26,6 +26,9 @@ class Alert(pygame.font.Font):
             return True
         return False
 
+    def render(self, surf):
+        surf.blit(self.surface, (self.x_pos, self.y_pos))
+
 class MenuItem(pygame.font.Font):
     def __init__(self, text, font = MENU_FONT, font_size = MENU_FONT_SIZE, font_color = MENU_FONT_COLOR, (pos_x, pos_y) = (0, 0), padding = 0, horizontal = False):
         pygame.font.Font.__init__(self, font, font_size)
@@ -112,11 +115,14 @@ class Menu():
         for item in self.items:
             if item.is_mouse_over((mpos[0] - self.x_pos + offset[0], mpos[1] - self.y_pos + offset[1])):
                 try:
+                    print self.funcs[item.text]
                     if len(self.funcs[item.text]) == 1:
                         self.funcs[item.text][0]()
                     else:
-                        self.funcs[item.text][0](self.funcs[item.text][1:])
+                        print self.funcs[item.text][1:]
+                        print self.funcs[item.text][0](self.funcs[item.text][1:])
                 except TypeError:
+                    print self.funcs[item.text]
                     self.funcs[item.text]()
 
     def mouse_over(self, item):
@@ -145,7 +151,7 @@ class StringMenu(Menu):
         Menu.__init__(self, image, funcs, width, height, x_pos, y_pos, horizontal)
         self.items = []
         for index, item in enumerate(items):
-            menu_item = MenuItem(item, padding = item_padding, horizontal = horizontal)
+            menu_item = MenuItem(item, padding = item_padding, horizontal = horizontal, font_size = font_size)
             if button_bg:
                 menu_item.set_background(pygame.image.load(button_bg))
             if self.horizontal:
