@@ -39,7 +39,7 @@ class GatherJob(Job):
             villager.job = None
         else:
             for index, item in enumerate(self.key):
-                gathered = self.tile.harvest(item, random.randint(self.lower_bound[index], self.upper_bound))
+                gathered = self.tile.harvest(item, random.randint(self.lower_bound[index], self.upper_bound[index]))
                 villager.parent.get_resource(item, -gathered)
             villager.get_xp(self.xp_type)
             if random.randint(1, 100) <= self.injury_chance:

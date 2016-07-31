@@ -1,0 +1,42 @@
+Brushfires
+
+	The summer sun is both a blessing and a curse. The plants flourish and grow, and the animals alongside them. 
+	However, the spirits can be cruel. They plague the land with great fires that consume the grass and trees.
+
+	Fight to contain the fires (several villagers injured)
+	Let the land burn (2 nearby tiles lose resources)
+
+Feuding villagers
+
+	[villager1] claimes that [villager2] borrowed some good tools. [villager2] claims that nothing of the sort happened. Anger hangs thick in the air and the two are about to come to blows.
+
+	A little violence never hurt anyone (both villagers injured)
+	Let the tools be replaced from our stockpile (-wood)
+	
+
+Encroaching animals
+
+	Storing large amounts of food in one place is an excellent way to ensure our people are fed. It also ensures that wild beasts will take interest in our village as well. 
+
+	Allow them to take their pick (-food)
+	Scare them away (chance of an injury)
+	Kill and consume them (chance of multiple injuries, +food)
+
+Strange plant
+
+	Our gatherers have returned with a most unusual new fruit. What is it?
+
+	A delicious morsel! (+food or an injury)
+	A useful medicine! (heal an injury or cause one)
+	A boon from the gods! (1 villager +XP or -XP)
+	Useless. (nothing)
+
+Thunderstorm
+
+	A great storm has blown in on strong winds and threatens to tear the village apart. This is surely a sign of wrathful spirits. They demand sacrifice!
+
+	Food will soothe them. (-food, 20% chance random building is destroyed)
+	Only blood will calm the winds. (villager dies, no building damage)
+	Ignore the spirits. (50% chance random building is destroyed)
+
+	

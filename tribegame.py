@@ -51,7 +51,7 @@ class TribeGame(object):
         event = self.calendar.next_turn()
         if event != None:
             event.run(self)
-        if len(pop) == 0:
+        if len(self.pop) == 0:
             self.game_over()
 
     def render(self, screen):
@@ -111,8 +111,8 @@ class TribeGame(object):
 
     def enough_resources(self, required):
         try:
-            for key, val in required:
-                if self._resources[key] < val:
+            for key in required:
+                if self._resources[key] < required[key]:
                     return False
             return True
         except:
@@ -128,15 +128,3 @@ class TribeGame(object):
     def game_over(self):
         self.event = Menu.Alert("Your last villager has shuffled off this mortal coil. Years from now, another tribe may stumble across your \
             abandoned village and wonder what failure brought you to such ruin. But they will have no answer.")
-
-if __name__ == "__main__":
-    import GameEvent
-    import villagers
-    import tile
-    import tilemanager
-
-    cal = GameEvent.Calendar([None, None, None])
-    tile1 = tile.Tile(None, "Forest", wood = 50)
-    tile2 = tile.Tile(None, "Berries", food = 50)
-    tile3 = tile.Tile(None, "Mountain", stone = 50)
-    tile_man = tilemanager.TileManager(50, [tile1, tile2, tile3])
