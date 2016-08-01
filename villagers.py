@@ -47,6 +47,9 @@ class Villager(object):
     def injure(self, val):
         self.injury += val
 
+    def health_boxes(self):
+        return self.injury - self.parent.injury_threshold
+
     def get_xp(self, key):
         if key == None:
             return None

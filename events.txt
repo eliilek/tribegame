@@ -14,14 +14,6 @@ Feuding villagers
 	Let the tools be replaced from our stockpile (-wood)
 	
 
-Encroaching animals
-
-	Storing large amounts of food in one place is an excellent way to ensure our people are fed. It also ensures that wild beasts will take interest in our village as well. 
-
-	Allow them to take their pick (-food)
-	Scare them away (chance of an injury)
-	Kill and consume them (chance of multiple injuries, +food)
-
 Strange plant
 
 	Our gatherers have returned with a most unusual new fruit. What is it?

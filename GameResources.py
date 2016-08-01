@@ -1,4 +1,4 @@
-MENU_BACKGROUND = "Resources/BlackMenu.png"
+MENU_BACKGROUND = "Resources/menu.jpg"
 MENU_FONT = None
 MENU_FONT_SIZE = 30
 MENU_FONT_COLOR = (255, 255, 255)

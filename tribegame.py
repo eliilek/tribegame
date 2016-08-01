@@ -42,6 +42,9 @@ class TribeGame(object):
     def set_event(self, event):
         self.event = event
 
+    def set_alert(self, text, args = None):
+        self.event = Menu.Alert(text, args)
+
     def loop(self):
         self.land.loop()
 
