@@ -8,7 +8,7 @@ def rand_name():
     return "Steve"
 
 class TribeGame(object):
-    def __init__(self, calendar, land, tribe_name, starting_pop, xp_per_level, size, starting_food = -1, starting_wood = 0, starting_stone = 0, parent = None):
+    def __init__(self, calendar, land, tribe_name, starting_pop, xp_per_level, size, starting_food = -1, starting_wood = 0, starting_stone = 0, parent = None, images = {}):
         self.tribe_name = tribe_name
         self.calendar = calendar
         self.calendar.begin()
@@ -16,6 +16,7 @@ class TribeGame(object):
         self.land.parent = self
         self.event = None
         self.parent = parent
+        self.images = images
 
         ###Change these to be the corner within the side menus
         self.land_rect = pygame.Rect(LAND_CORNERS)
@@ -27,13 +28,22 @@ class TribeGame(object):
         self._resources = {'wood':starting_wood, 'stone':starting_stone, 'food':(starting_food if starting_food != -1 else starting_pop * 6)}
         self.injury_threshold = 5
         self.healing_cap = 1
-        self.surf = pygame.Surface(size)
+        try:
+            self.surf = pygame.transform.scale(self.images["menu_background"], size)
+        except:
+            self.surf = pygame.Surface(size)
 
         self.frame_objects = []
         next_turn = Menu.StringMenu("Resources/turn_button.jpg", ["Next Turn"], {"Next Turn": self.turn}, width = 150, height = 50, x_pos = SCREEN_SIZE[0] - 150, y_pos = SCREEN_SIZE[1] - 50)
         next_turn.mouse_over = lambda item: None
         next_turn.mouse_not_over = lambda item: None
         self.frame_objects.append(next_turn)
+
+        try:
+            top_menu = Menu.TopBarMenu(self.images["menu_background"], self, width = self.surf.get_width(), height = 20)
+        except:
+            top_menu = Menu.TopBarMenu(MENU_BACKGROUND, self, width = self.surf.get_width(), height = 20)
+        self.frame_objects.append(top_menu)
 
 
         for i in range(0, starting_pop):
@@ -43,9 +53,14 @@ class TribeGame(object):
         self.event = event
 
     def set_alert(self, text, args = None):
-        self.event = Menu.Alert(text, args)
+        try:
+            self.event = Menu.Alert(text, args, background = self.images["menu_background"])
+        except:
+            self.event = Menu.Alert(text, args)
 
     def loop(self):
+        for item in self.frame_objects:
+            item.loop()
         self.land.loop()
 
     def turn(self):

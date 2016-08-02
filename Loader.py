@@ -15,7 +15,19 @@ from villagers import Villager
 #The first item in each list is the function to call, the rest are arguments to be passed to that function
 #Arguments will be passed as a list, need to be unpacked
 #Selector returns true for success, false for failure
-def multi_function_lambda((success, failure, selector, needed_condition = None, game_object = None, requirements = None)):
+def multi_function_lambda(args):
+    success = args[0]
+    failure = args[1]
+    selector = args[2]
+    if len(args) == 6:
+        needed_condtion = args[3]
+        game_object = args[4]
+        requirements = args[5]
+    else:
+        needed_condition = None
+        game_object = args[3]
+        requirements = args[4]
+
     if needed_condition != None:
         if (len(needed_condition) == 1) and (needed_condition[0]() == False):
             return None
@@ -43,8 +55,9 @@ def multi_function_lambda((success, failure, selector, needed_condition = None, 
             func[0](func[1:])
 
 def load_for_tribegame():
-    random_events = load_random_events()
-    events = load_game_events(random_events, GAME_LENGTH)
+    images = load_images()
+    random_events = load_random_events(images)
+    events = load_game_events(random_events, GAME_LENGTH, images)
     calendar = GameEvent.Calendar(events)
 
     progenitor_tiles = []
@@ -69,7 +82,14 @@ jobs.GatherJob("Hunt Small Game", ("food", "hides"), None, "food", (4, 1), (5, 2
 
     size = SCREEN_SIZE
 
-    return tribegame.TribeGame(calendar, land, tribe_name, starting_pop, xp_per_level, size)
+    return TribeGame(calendar, land, tribe_name, starting_pop, xp_per_level, size, images = images)
+
+def load_images():
+    images = {}
+    images["village"] = pygame.image.load("Resources/village.jpg").convert()
+    images["menu_background"] = pygame.image.load("Resources/menu.jpg").convert()
+
+    return images
 
 def load_buildings():
     buildings = []
@@ -88,8 +108,13 @@ def load_buildings():
     quarry.progress = quarry.completion_progress
     buildings.append(quarry)
 
-def load_random_events():
+def load_random_events(images):
     events = []
+    try:
+        menu_background = images["menu_background"]
+    except:
+        menu_background = MENU_BACKGROUND
+
     #Random event 1
     title = "Injury Goes Bad"
     text = lambda villager:"Bad things happen. Sometimes bad things happen, and then just keep happening. This is one of those times. \
@@ -106,7 +131,7 @@ if len([villager for villager in game_object.pop if villager.injury > 0]) > 0 el
     options_funcs["A little rest and a good meal is all they need. They'll be fine. (-5 food)"] = [multi_function_lambda, \
 [[TribeGame.get_resource, "game_object", "food", 5], [TribeGame.set_alert, "game_object", success_text, "requirements"]], \
 [[TribeGame.get_resource, "game_object", "food", 5], [Villager.set_injury, "requirements", 1023], [TribeGame.set_alert, "game_object", failure_text, "requirements"]], \
-(lambda :random.random() < .6), [TribeGame.has_resource, "game_object", {"food":5}]]
+(lambda :random.random() < .6), [TribeGame.enough_resources, "game_object", {"food":5}]]
     options_funcs["Cut away the rot! We must do everything in our power to save their life! (+1 injury)"] = [multi_function_lambda, \
 [[Villager.injure, "requirements", 1], [TribeGame.set_alert, "game_object", success_text, "requirements"]], \
 [[Villager.set_injury, "requirements", 1023], [TribeGame.set_alert, "game_object", failure_text, "requirements"]], \
@@ -115,7 +140,7 @@ if len([villager for villager in game_object.pop if villager.injury > 0]) > 0 el
 [[Villager.set_injury, "requirements", 1023], [TribeGame.set_alert, "game_object", failure_text, "requirements"]], (lambda: random.random() < .3)]
     options_funcs["This land is no place for the weak. Sharpen the knives."] = [multi_function_lambda, \
 [[Villager.set_injury, "requirements", 1023], [TribeGame.set_alert, "game_object", murder_text, "requirements"]], [], lambda: True]
-    options_menu = Menu.StringMenu(MENU_BACKGROUND, options_text, options_funcs, MENU_FONT, MENU_FONT_SIZE, OPTIONS_COLOR, EVENT_WIDTH, EVENT_HEIGHT)
+    options_menu = Menu.StringMenu(menu_background, options_text, options_funcs, MENU_FONT, MENU_FONT_SIZE, OPTIONS_COLOR, EVENT_WIDTH, EVENT_HEIGHT)
     events.append(GameEvent.GameEvent(title, text, options_menu, requirements))
 
     #Random event 2
@@ -139,7 +164,7 @@ coming from the food storage."
     options_funcs["How nice of our food to come to us! Ready the spears!"] = [multi_function_lambda, [[TribeGame.get_resource, "game_object", "food", -7], \
 [TribeGame.set_alert, "game_object", attack_success]], [[TribeGame.get_resource, "game_object", "food", -4], [Villager.injure, "requirements", 2], \
 [TribeGame.set_alert, "game_object", attack_failure, "requirements"]], (lambda: random.random < .4)]
-    options_menu = Menu.StringMenu(MENU_BACKGROUND, options_text, options_funcs, MENU_FONT, VILLAGER_MENU_FONT_SIZE, OPTIONS_COLOR, EVENT_WIDTH, EVENT_HEIGHT)
+    options_menu = Menu.StringMenu(menu_background, options_text, options_funcs, MENU_FONT, VILLAGER_MENU_FONT_SIZE, OPTIONS_COLOR, EVENT_WIDTH, EVENT_HEIGHT)
     events.append(GameEvent.GameEvent(title, text, options_menu, requirements))
 
     return events

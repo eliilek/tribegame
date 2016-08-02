@@ -6,8 +6,13 @@ from pygame.locals import *
 from GameResources import *
 
 class TileManager(object):
-    def __init__(self, size, tiles, buildings, camera_width, camera_height, parent = None):
+    def __init__(self, size, tiles, buildings, camera_width, camera_height, parent = None, images = {}):
         self.progenitor_tiles = tiles
+        self.images = images
+        try:
+            menu_background = images["menu_background"]
+        except:
+            menu_background = MENU_BACKGROUND
         self.parent = parent
         self.buildings = buildings
         self.camera_width = camera_width
@@ -61,7 +66,7 @@ class TileManager(object):
                     functions[job.name] = (job.secondary_menu, self, clicked_tile, parent)
                 except:
                     functions[job.name] = (self.jobs_to_villagers, job)
-            self.open_menu = Menu.StringMenu(MENU_BACKGROUND, job_names, functions, MENU_FONT, MENU_FONT_SIZE, MENU_FONT_COLOR, TILE_MENU_WIDTH, TILE_MENU_HEIGHT, TILE_MENU_BG, mpos[0] + self.camera_x, mpos[1] + self.camera_y)
+            self.open_menu = Menu.StringMenu(menu_background, job_names, functions, MENU_FONT, MENU_FONT_SIZE, MENU_FONT_COLOR, TILE_MENU_WIDTH, TILE_MENU_HEIGHT, TILE_MENU_BG, mpos[0] + self.camera_x, mpos[1] + self.camera_y)
 
     def jobs_to_villagers(self, args):
         job = args[0]
@@ -69,7 +74,7 @@ class TileManager(object):
         funcs = {}
         for villager in villagers:
             funcs[villager] = (villager.assign_job, job, self.clear_menu)
-        self.open_menu = Menu.VillagerJobMenu(MENU_BACKGROUND, villagers, funcs, job.xp_type, TILE_MENU_WIDTH, TILE_MENU_HEIGHT, TILE_MENU_BG, self.open_menu.x_pos, self.open_menu.y_pos)
+        self.open_menu = Menu.VillagerJobMenu(menu_background, villagers, funcs, job.xp_type, TILE_MENU_WIDTH, TILE_MENU_HEIGHT, TILE_MENU_BG, self.open_menu.x_pos, self.open_menu.y_pos)
 
     def clear_menu(self):
         self.open_menu = None

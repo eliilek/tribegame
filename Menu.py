@@ -12,7 +12,10 @@ class Alert(pygame.font.Font):
         for line in text:
             label = self.render(line, 1, font_color)
             labels.append(label)
-        surface = pygame.image.load(background).convert()
+        if isinstance(background, basestring):
+            surface = pygame.image.load(background).convert()
+        else:
+            surface = background
         self.surface = pygame.transform.scale(surface, (labels[0].get_width() + 10, (labels[0].get_height() * len(labels)) + 10))
         for index, label in enumerate(labels):
             self.surface.blit(label, (5, 5 + (index * label.get_height()) + (index * 2)))
@@ -88,7 +91,10 @@ class Menu():
             width = pygame.display.get_surface().get_width()
         if height == None:
             height = pygame.display.get_surface().get_height()
-        screen = pygame.image.load(image)
+        if isinstance(image, basestring):
+            screen = pygame.image.load(image)
+        else:
+            screen = image
         self.screen = pygame.transform.scale(screen, (width, height))
         self.screen_width = self.screen.get_width()
         self.screen_height = self.screen.get_height()
