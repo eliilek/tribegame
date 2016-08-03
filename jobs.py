@@ -95,3 +95,10 @@ class BuildingSelectJob(Job):
                     building_funcs[building.name] = (lambda :None)
         new_menu = StringMenu(MENU_BACKGROUND, building_names, building_funcs, MENU_FONT, MENU_FONT_SIZE, MENU_FONT_COLOR, TILE_MENU_WIDTH, TILE_MENU_HEIGHT, TILE_MENU_BG, tile_manager.open_menu.x_pos, tile_manager.open_menu.y_pos)
         tile_manager.open_menu = new_menu
+
+class MigrationJob(Job):
+    def __init__(self, name, tile):
+        Job.__init__(self, name, tile)
+
+    def secondary_menu(self, tile_manager, tile, village):
+        

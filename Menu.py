@@ -121,14 +121,11 @@ class Menu():
         for item in self.items:
             if item.is_mouse_over((mpos[0] - self.x_pos + offset[0], mpos[1] - self.y_pos + offset[1])):
                 try:
-                    print self.funcs[item.text]
                     if len(self.funcs[item.text]) == 1:
                         self.funcs[item.text][0]()
                     else:
-                        print self.funcs[item.text][1:]
-                        print self.funcs[item.text][0](self.funcs[item.text][1:])
+                        self.funcs[item.text][0](self.funcs[item.text][1:])
                 except TypeError:
-                    print self.funcs[item.text]
                     self.funcs[item.text]()
 
     def mouse_over(self, item):
@@ -183,10 +180,10 @@ class StringMenu(Menu):
 class TopBarMenu(StringMenu):
     def __init__(self, image, game_object, font = None, font_size = 20, font_color = (255, 255, 255), width = None, height = None):
         self.game_object = game_object
-        self.prev_resources = [key + ": " + val for key, val in self.game_object._resources]
+        self.prev_resources = [key + ": " + str(self.game_object._resources[key]) for key in self.game_object._resources]
         self.width = width
         self.height = height
-        StringMenu.__init__(self, image, resources, {item: lambda:None for item in items}, font, font_size, font_color, self.width, self.height, horizontal = True)
+        StringMenu.__init__(self, image, self.prev_resources, {item: lambda:None for item in self.prev_resources}, font, font_size, font_color, self.width, self.height, horizontal = True)
 
     def mouse_over(self, item):
         pass
@@ -195,7 +192,7 @@ class TopBarMenu(StringMenu):
         pass
 
     def loop(self):
-        if self.prev_resources != [key + ": " + val for key, val in self.game_object._resources]:
+        if self.prev_resources != [key + ": " + str(self.game_object._resources[key]) for key in self.game_object._resources]:
             StringMenu.__init__(self, image, resources, {item: lambda:None for item in items}, None, 20, (255, 255, 255), self.width, self.height, horizontal = True)
 
 #Villager image on left, right is villager name, relevant villager XP beneath, centered on villager image height

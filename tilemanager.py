@@ -10,9 +10,9 @@ class TileManager(object):
         self.progenitor_tiles = tiles
         self.images = images
         try:
-            menu_background = images["menu_background"]
+            self.menu_background = images["menu_background"]
         except:
-            menu_background = MENU_BACKGROUND
+            self.menu_background = MENU_BACKGROUND
         self.parent = parent
         self.buildings = buildings
         self.camera_width = camera_width
@@ -21,7 +21,11 @@ class TileManager(object):
         self.tiles = [[random.choice(self.progenitor_tiles).clone(i, j) for i in range(size)] for j in range(size)]
         self.village_x = random.randint(1, size - 2)
         self.village_y = random.randint(1, size - 2)
-        self.tiles[self.village_x][self.village_y].to_village(1)
+        try:
+            village_image = images["village"]
+        except:
+            village_image = VILLAGE_IMAGE
+        self.tiles[self.village_x][self.village_y].to_village(1, village_image)
         for i in range(self.village_x - 1, self.village_x + 2):
             for j in range(self.village_y - 1, self.village_y + 2):
                 self.tiles[i][j].reachable = True
@@ -66,7 +70,7 @@ class TileManager(object):
                     functions[job.name] = (job.secondary_menu, self, clicked_tile, parent)
                 except:
                     functions[job.name] = (self.jobs_to_villagers, job)
-            self.open_menu = Menu.StringMenu(menu_background, job_names, functions, MENU_FONT, MENU_FONT_SIZE, MENU_FONT_COLOR, TILE_MENU_WIDTH, TILE_MENU_HEIGHT, TILE_MENU_BG, mpos[0] + self.camera_x, mpos[1] + self.camera_y)
+            self.open_menu = Menu.StringMenu(self.menu_background, job_names, functions, MENU_FONT, MENU_FONT_SIZE, MENU_FONT_COLOR, TILE_MENU_WIDTH, TILE_MENU_HEIGHT, TILE_MENU_BG, mpos[0] + self.camera_x, mpos[1] + self.camera_y)
 
     def jobs_to_villagers(self, args):
         job = args[0]
@@ -74,7 +78,7 @@ class TileManager(object):
         funcs = {}
         for villager in villagers:
             funcs[villager] = (villager.assign_job, job, self.clear_menu)
-        self.open_menu = Menu.VillagerJobMenu(menu_background, villagers, funcs, job.xp_type, TILE_MENU_WIDTH, TILE_MENU_HEIGHT, TILE_MENU_BG, self.open_menu.x_pos, self.open_menu.y_pos)
+        self.open_menu = Menu.VillagerJobMenu(self.menu_background, villagers, funcs, job.xp_type, TILE_MENU_WIDTH, TILE_MENU_HEIGHT, TILE_MENU_BG, self.open_menu.x_pos, self.open_menu.y_pos)
 
     def clear_menu(self):
         self.open_menu = None

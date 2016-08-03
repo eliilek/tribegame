@@ -72,7 +72,7 @@ jobs.GatherJob("Hunt Small Game", ("food", "hides"), None, "food", (4, 1), (5, 2
 
     #progenitor_buildings = load_buildings()
     progenitor_buildings = []
-    land = tilemanager.TileManager(LAND_SIZE, progenitor_tiles, progenitor_buildings, LAND_CORNERS[1][0], LAND_CORNERS[1][1])
+    land = tilemanager.TileManager(LAND_SIZE, progenitor_tiles, progenitor_buildings, LAND_CORNERS[1][0], LAND_CORNERS[1][1], images = images)
 
     tribe_name = "The Demo Tribe"
 
@@ -87,6 +87,7 @@ jobs.GatherJob("Hunt Small Game", ("food", "hides"), None, "food", (4, 1), (5, 2
 def load_images():
     images = {}
     images["village"] = pygame.image.load("Resources/village.jpg").convert()
+    images["village"].set_colorkey((255, 255, 255))
     images["menu_background"] = pygame.image.load("Resources/menu.jpg").convert()
 
     return images
@@ -169,7 +170,7 @@ coming from the food storage."
 
     return events
 
-def load_game_events(random_events, length):
+def load_game_events(random_events, length, images):
     events = [None for i in range(length)]
     #Scheduled events
 

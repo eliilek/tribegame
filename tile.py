@@ -58,11 +58,12 @@ class Tile(object):
             pass
 
     #Clone first
-    def to_village(self, healing_cap):
+    def to_village(self, healing_cap, village_image):
         self.name = "Village"
         self.tile_jobs.append(jobs.HealJob("Rest", self, healing_cap))
-        village_image = pygame.image.load(VILLAGE_IMAGE).convert()
-        village_image = pygame.transform.scale(village_image, (20, 20))
+        if isinstance(village_image, basestring):
+            village_image = pygame.image.load(village_image)
+        village_image = pygame.transform.scale(village_image, (40, 40))
         self.renderable.blit(village_image, (15, 15))
         ###Add procreation job
 
