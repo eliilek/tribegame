@@ -17,6 +17,7 @@ class TribeGame(object):
         self.event = None
         self.parent = parent
         self.images = images
+        self._migrating = False
 
         ###Change these to be the corner within the side menus
         self.land_rect = pygame.Rect(LAND_CORNERS)
@@ -64,11 +65,17 @@ class TribeGame(object):
         self.land.loop()
 
     def turn(self):
+        if self._migrating:
+            self.land.migrate_village(self._migrating)
+            self._migrating = False
+        else:
+            for villager in self.pop:
+                villager.work()
+            event = self.calendar.next_turn()
+            if event != None:
+                event.run(self)
         for villager in self.pop:
-            villager.work()
-        event = self.calendar.next_turn()
-        if event != None:
-            event.run(self)
+            villager.eat()
         if len(self.pop) == 0:
             self.game_over()
 
@@ -143,6 +150,9 @@ class TribeGame(object):
             if villager.job == None:
                 free.append(villager)
         return free
+
+    def start_migration(self, tile):
+        self._migrating = tile
 
     def game_over(self):
         self.event = Menu.Alert("Your last villager has shuffled off this mortal coil. Years from now, another tribe may stumble across your \

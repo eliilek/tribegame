@@ -60,15 +60,7 @@ def load_for_tribegame():
     events = load_game_events(random_events, GAME_LENGTH, images)
     calendar = GameEvent.Calendar(events)
 
-    progenitor_tiles = []
-    #Plains Tile
-    plains = tile.Tile("Resources/plains.jpg", "Plains", [jobs.GatherJob("Forage", "food", None, "food", 3, 3), \
-jobs.GatherJob("Hunt Small Game", ("food", "hides"), None, "food", (4, 1), (5, 2), 5, 1)], resources ={"food":(50, 50, 5), "hides":(20, 20, 0)})
-    progenitor_tiles.append(plains)
-    forest = tile.Tile("Resources/forest.jpg", "Forest", [jobs.GatherJob("Gather Wood", "wood", None, "gather", 10, 10)], resources = {"wood":(250, 250, 8)})
-    progenitor_tiles.append(forest)
-    rocks = tile.Tile("Resources/rocky.jpg", "Rocky Outcrop", [jobs.GatherJob("Gather Stone", "stone", None, "gather", 4, 4)], resources = {"stone":(200, 200, 0)})
-    progenitor_tiles.append(rocks)
+    progenitor_tiles = load_tiles()
 
     #progenitor_buildings = load_buildings()
     progenitor_buildings = []
@@ -83,6 +75,16 @@ jobs.GatherJob("Hunt Small Game", ("food", "hides"), None, "food", (4, 1), (5, 2
     size = SCREEN_SIZE
 
     return TribeGame(calendar, land, tribe_name, starting_pop, xp_per_level, size, images = images)
+
+def load_tiles():
+    #Plains Tile
+    plains = tile.Tile("Resources/plains.jpg", "Plains", [jobs.GatherJob("Forage", "food", None, "food", 3, 3), \
+jobs.GatherJob("Hunt Small Game", ("food", "hides"), None, "food", (4, 1), (5, 2), 5, 1)], resources ={"food":(50, 50, 5), "hides":(20, 20, 0)})
+    progenitor_tiles.append(plains)
+    forest = tile.Tile("Resources/forest.jpg", "Forest", [jobs.GatherJob("Gather Wood", "wood", None, "gather", 10, 10)], resources = {"wood":(250, 250, 8)})
+    progenitor_tiles.append(forest)
+    rocks = tile.Tile("Resources/rocky.jpg", "Rocky Outcrop", [jobs.GatherJob("Gather Stone", "stone", None, "gather", 4, 4)], resources = {"stone":(200, 200, 0)})
+    progenitor_tiles.append(rocks)
 
 def load_images():
     images = {}

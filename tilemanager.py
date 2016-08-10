@@ -22,10 +22,10 @@ class TileManager(object):
         self.village_x = random.randint(1, size - 2)
         self.village_y = random.randint(1, size - 2)
         try:
-            village_image = images["village"]
+            self.village_image = images["village"]
         except:
-            village_image = VILLAGE_IMAGE
-        self.tiles[self.village_x][self.village_y].to_village(1, village_image)
+            self.village_image = VILLAGE_IMAGE
+        self.tiles[self.village_x][self.village_y].to_village(1, self.village_image)
         for i in range(self.village_x - 1, self.village_x + 2):
             for j in range(self.village_y - 1, self.village_y + 2):
                 self.tiles[i][j].reachable = True
@@ -53,6 +53,21 @@ class TileManager(object):
         ###For each tile within the camera, render buildings for that tile.
         ###Also render mobile objects like herds once that's sorted.
         screen.blit(renderable_screen, (x, y), Rect((self.camera_x, self.camera_y), (self.camera_width, self.camera_height)))
+
+    def migrate_village(self, tile):
+        for i in range(self.village_x - 1, self.village_x + 2):
+            for j in range(self.village_y - 1, self.village_y + 2):
+                self.tiles[i][j].reachable = False
+        self.tiles[self.village_x][self.village_y].to_base()
+        self.village_x = tile.x
+        self.village_y = tile.y
+        self.tiles[self.village_x][self.village_y].to_village(1, self.village_image)
+        for i in range(self.village_x - 1, self.village_x + 2):
+            for j in range(self.village_y - 1, self.village_y + 2):
+                self.tiles[i][j].reachable = True
+        camera_center = (self.village_x * self.tile_size[0], self.village_y * self.tile_size[1])
+        self.camera_x = camera_center[0] - (self.camera_width/2)
+        self.camera_y = camera_center[1] - (self.camera_height/2)
 
     def click(self, mpos):
         if self.open_menu != None and self.open_menu.is_my_click((mpos[0] + self.camera_x, mpos[1] + self.camera_y)):

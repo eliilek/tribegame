@@ -6,6 +6,7 @@ import jobs
 class Tile(object):
     def __init__(self, image, name, tile_jobs = [], resources = {}, buildings = [], x = 0, y = 0):
         self.name = name
+        self.base_name = name
         self.buildings = buildings
         self.tile_jobs = tile_jobs
         if isinstance(image, basestring):
@@ -66,6 +67,13 @@ class Tile(object):
         village_image = pygame.transform.scale(village_image, (40, 40))
         self.renderable.blit(village_image, (15, 15))
         ###Add procreation job
+
+    def to_base(self):
+        self.name = self.base_name
+        for job in self.tile_jobs:
+            if isinstance(job, jobs.HealJob):
+                self.tile_jobs.remove(job)
+        self.renderable = self.image.copy()
 
     def build(self, building):
         self.buildings.append(building)

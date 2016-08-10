@@ -81,3 +81,6 @@ class Villager(object):
     def work(self):
         if self.job != None:
             self.job.work(self)
+
+    def eat(self):
+        eaten = self.parent.get_resource("food", 2)

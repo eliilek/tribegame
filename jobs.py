@@ -1,6 +1,7 @@
 import random
 from GameResources import *
 import copy
+import GameEvent
 
 class Job():
     def __init__(self, name, tile, injury_chance = 0, injury_severity = 1):
@@ -101,4 +102,17 @@ class MigrationJob(Job):
         Job.__init__(self, name, tile)
 
     def secondary_menu(self, tile_manager, tile, village):
-        
+        title = "Confirmation"
+        text = "Are you sure you want to migrate the village? No other jobs can be completed during the journey."
+
+        try:
+            menu_background = images["menu_background"]
+        except:
+            menu_background = MENU_BACKGROUND
+        options_text = ["Migrate", "Not Yet"]
+        options_funcs = {}
+        options_funcs["Migrate"] = [village.start_migration, tile]
+        options_funcs["Not Yet"] = [lambda: True]
+
+        options_menu = Menu.StringMenu(menu_background, options_text, options_funcs, MENU_FONT, MENU_FONT_SIZE, OPTIONS_COLOR, EVENT_WIDTH, EVENT_HEIGHT, horizontal = True)
+        confirmation_event = GameEvent.GameEvent(title, text, options_menu)
